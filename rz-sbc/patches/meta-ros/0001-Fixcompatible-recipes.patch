@@ -1,0 +1,581 @@
+diff --git a/meta-ros-common/recipes-devtools/python/python3-flake8-builtins_2.2.0.bb b/meta-ros-common/recipes-devtools/python/python3-flake8-builtins_2.2.0.bb
+index 95e1fe77c..db4e40985 100644
+--- a/meta-ros-common/recipes-devtools/python/python3-flake8-builtins_2.2.0.bb
++++ b/meta-ros-common/recipes-devtools/python/python3-flake8-builtins_2.2.0.bb
+@@ -3,10 +3,12 @@ HOMEPAGE = "https://github.com/gforcada/flake8-builtins"
+ SECTION = "devel/python"
+ LICENSE = "GPL-2.0-or-later"
+ LIC_FILES_CHKSUM = "file://LICENSE;md5=b234ee4d69f5fce4486a80fdaf4a4263"
++DEPENDS += "python3-hatchling-native"
+ 
+ PYPI_PACKAGE = "flake8_builtins"
+ SRC_URI[sha256sum] = "392d5af3a0720c5a863aa93dc47f48c879081345a143fe9f20d995fe9ff5686a"
++DEPENDS += "python3-hatchling-native"
+ 
+-inherit pypi
++inherit pypi python_hatchling
+ 
+ BBCLASSEXTEND = "native"
+diff --git a/meta-ros-common/recipes-devtools/python/python3-flake8-comprehensions_3.14.0.bb b/meta-ros-common/recipes-devtools/python/python3-flake8-comprehensions_3.14.0.bb
+index cc9416bfc..669bfbc9a 100644
+--- a/meta-ros-common/recipes-devtools/python/python3-flake8-comprehensions_3.14.0.bb
++++ b/meta-ros-common/recipes-devtools/python/python3-flake8-comprehensions_3.14.0.bb
+@@ -7,6 +7,8 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=dd54c94e040946267bc2300dbc7d7e6d"
+ PYPI_PACKAGE = "flake8_comprehensions"
+ SRC_URI[sha256sum] = "81768c61bfc064e1a06222df08a2580d97de10cb388694becaf987c331c6c0cf"
+ 
+-inherit pypi
++DEPENDS += "python3-hatchling-native"
++
++inherit pypi python_hatchling
+ 
+ BBCLASSEXTEND = "native"
+diff --git a/meta-ros-common/recipes-devtools/python/python3-flake8-docstrings_1.7.0.bb b/meta-ros-common/recipes-devtools/python/python3-flake8-docstrings_1.7.0.bb
+index 23dd9bd70..34048bd01 100644
+--- a/meta-ros-common/recipes-devtools/python/python3-flake8-docstrings_1.7.0.bb
++++ b/meta-ros-common/recipes-devtools/python/python3-flake8-docstrings_1.7.0.bb
+@@ -7,6 +7,8 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=a34bc20b983e1104e2d50423b224b087"
+ PYPI_PACKAGE = "flake8_docstrings"
+ SRC_URI[sha256sum] = "4c8cc748dc16e6869728699e5d0d685da9a10b0ea718e090b1ba088e67a941af"
+ 
+-inherit pypi
++DEPENDS += "python3-hatchling-native"
++
++inherit pypi python_hatchling
+ 
+ BBCLASSEXTEND = "native"
+diff --git a/meta-ros-common/recipes-devtools/python/python3-flake8-quotes_3.3.2.bb b/meta-ros-common/recipes-devtools/python/python3-flake8-quotes_3.3.2.bb
+index 2e04c2c2b..fbbcfcea8 100644
+--- a/meta-ros-common/recipes-devtools/python/python3-flake8-quotes_3.3.2.bb
++++ b/meta-ros-common/recipes-devtools/python/python3-flake8-quotes_3.3.2.bb
+@@ -7,6 +7,8 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=838c366f69b72c5df05c96dff79b35f2"
+ PYPI_PACKAGE = "flake8-quotes"
+ SRC_URI[sha256sum] = "6e26892b632dacba517bf27219c459a8396dcfac0f5e8204904c5a4ba9b480e1"
+ 
+-inherit pypi
++DEPENDS += "python3-hatchling-native"
++
++inherit pypi python_hatchling
+ 
+ BBCLASSEXTEND = "native"
+diff --git a/meta-ros-common/recipes-devtools/python/python3-transforms3d/0001-fix-using-old-syntax.patch b/meta-ros-common/recipes-devtools/python/python3-transforms3d/0001-fix-using-old-syntax.patch
+new file mode 100644
+index 000000000..b6b12d0d1
+--- /dev/null
++++ b/meta-ros-common/recipes-devtools/python/python3-transforms3d/0001-fix-using-old-syntax.patch
+@@ -0,0 +1,28 @@
++From 4f684a6c28b4677368db6601a443c2d989aeeac8 Mon Sep 17 00:00:00 2001
++From: Cong Nguyen <cong.nguyen.zn@renesas.com>
++Date: Mon, 16 Jun 2025 03:10:31 +0000
++Subject: [PATCH] update
++Upstream-Status: Pending
++---
++ versioneer.py | 4 ++--
++ 1 file changed, 2 insertions(+), 2 deletions(-)
++
++diff --git a/versioneer.py b/versioneer.py
++index 03b9a96..c98beeb 100644
++--- a/versioneer.py
+++++ b/versioneer.py
++@@ -335,9 +335,9 @@ def get_config_from_root(root):
++     # configparser.NoOptionError (if it lacks "VCS="). See the docstring at
++     # the top of versioneer.py for instructions on writing your setup.cfg .
++     setup_cfg = os.path.join(root, "setup.cfg")
++-    parser = configparser.SafeConfigParser()
+++    parser = configparser.ConfigParser()
++     with open(setup_cfg, "r") as f:
++-        parser.readfp(f)
+++        parser.read_file(f)
++     VCS = parser.get("versioneer", "VCS")  # mandatory
++ 
++     def get(parser, name):
++-- 
++2.43.0
++
+diff --git a/meta-ros-common/recipes-devtools/python/python3-transforms3d_0.3.1.bbappend b/meta-ros-common/recipes-devtools/python/python3-transforms3d_0.3.1.bbappend
+new file mode 100644
+index 000000000..7ed012270
+--- /dev/null
++++ b/meta-ros-common/recipes-devtools/python/python3-transforms3d_0.3.1.bbappend
+@@ -0,0 +1,2 @@
++FILESEXTRAPATHS:prepend := "${THISDIR}/${BPN}:"
++SRC_URI += "file://0001-fix-using-old-syntax.patch"
+\ No newline at end of file
+diff --git a/meta-ros-common/recipes-extended/suitesparse/suitesparse-cholmod_5.2.1.bb b/meta-ros-common/recipes-extended/suitesparse/suitesparse-cholmod_5.2.1.bb
+index 92e408ccb..7c3b7af04 100644
+--- a/meta-ros-common/recipes-extended/suitesparse/suitesparse-cholmod_5.2.1.bb
++++ b/meta-ros-common/recipes-extended/suitesparse/suitesparse-cholmod_5.2.1.bb
+@@ -25,6 +25,12 @@ EXTRA_OECMAKE = "-DSUITESPARSE_USE_64BIT_BLAS=ON -DBLA_PREFER_PKGCONFIG=ON"
+ DEPENDS:append:class-target = " chrpath-replacement-native"
+ # For some reason ends with bad RPATH
+ # WARNING: suitesparse-cholmod-5.4.0-r0 do_package_qa: QA Issue: package suitesparse-cholmod contains bad RPATH /jenkins/mjansa/build-ros/ros2-dashing-master/tmp-glibc/work/core2-32-oe-linux/suitesparse-cholmod/5.4.0-r0/image/usr/lib in file /jenkins/mjansa/build-ros/ros2-dashing-master/tmp-glibc/work/core2-32-oe-linux/suitesparse-cholmod/5.4.0-r0/packages-split/suitesparse-cholmod/usr/lib/libcholmod.so.3.0.13 [rpaths]
++
+ do_install:append() {
+     chrpath --delete ${D}${libdir}/*${SOLIBS}
++    # Fix hardcoded TMPDIR in .pc and .cmake files
++    sed -i -e "s:${WORKDIR}:\${prefix}/../..:g" \
++           -e "s:${D}::g" \
++           ${D}${libdir}/pkgconfig/CHOLMOD.pc \
++           ${D}${libdir}/cmake/CHOLMOD/CHOLMODTargets.cmake
+ }
+diff --git a/meta-ros2-jazzy/conf/ros-distro/include/jazzy/ros-distro.inc b/meta-ros2-jazzy/conf/ros-distro/include/jazzy/ros-distro.inc
+index 30eec58fe..1dfffbc1a 100644
+--- a/meta-ros2-jazzy/conf/ros-distro/include/jazzy/ros-distro.inc
++++ b/meta-ros2-jazzy/conf/ros-distro/include/jazzy/ros-distro.inc
+@@ -234,6 +234,9 @@ ROS_UNRESOLVED_DEP-python3-flake8-docstrings = "python3-flake8-docstrings"
+ # Used by generated-recipes/ament-lint/ament-flake8_0.16.0-1.bb
+ ROS_UNRESOLVED_DEP-python3-flake8-quotes = "python3-flake8-quotes"
+ 
++# Used by generated-recipes/automatika-embodied-agents/automatika-embodied-agents_0.3.2-1.bb
++ROS_UNRESOLVED_DEP-python3-httpx = "python3-httpx"
++ROS_UNRESOLVED_DEP-python3-platformdirs="python3-platformdirs"
+ ROS_UNRESOLVED_DEP-meson-native = "meson-native"
+ ROS_UNRESOLVED_DEP-python3-ply = "python3-ply"
+ ROS_UNRESOLVED_DEP-python3-jinja2 = "python3-jinja2"
+@@ -300,6 +303,10 @@ ROS_UNRESOLVED_DEP-libbluetooth-dev = "bluez5"
+ 
+ ROS_UNRESOLVED_DEP-libdbus-dev = "dbus"
+ 
++ROS_UNRESOLVED_DEP-python3-transforms3d = "python3-transforms3d"
++
++ROS_UNRESOLVED_DEP-python3-tqdm = "python3-tqdm"
++
+ ROS_UNRESOLVED_DEP-python3-distro = "python3-distro"
+ 
+ ROS_UNRESOLVED_DEP-python3-img2pdf = "python3-img2pdf"
+diff --git a/meta-ros2-jazzy/generated-recipes/control-toolbox/control-toolbox_4.2.0-1.bb b/meta-ros2-jazzy/generated-recipes/control-toolbox/control-toolbox_4.2.0-1.bb
+index a6ef4aa14..5707a6bd1 100644
+--- a/meta-ros2-jazzy/generated-recipes/control-toolbox/control-toolbox_4.2.0-1.bb
++++ b/meta-ros2-jazzy/generated-recipes/control-toolbox/control-toolbox_4.2.0-1.bb
+@@ -36,6 +36,7 @@ ROS_BUILD_DEPENDS = " \
+ 
+ ROS_BUILDTOOL_DEPENDS = " \
+     ament-cmake-native \
++    generate-parameter-library-py-native \
+ "
+ 
+ ROS_EXPORT_DEPENDS = " \
+diff --git a/meta-ros2-jazzy/generated-recipes/eigen-stl-containers/eigen-stl-containers_1.1.0-1.bb b/meta-ros2-jazzy/generated-recipes/eigen-stl-containers/eigen-stl-containers_1.1.0-1.bb
+index 61a2ee920..c2825adb3 100644
+--- a/meta-ros2-jazzy/generated-recipes/eigen-stl-containers/eigen-stl-containers_1.1.0-1.bb
++++ b/meta-ros2-jazzy/generated-recipes/eigen-stl-containers/eigen-stl-containers_1.1.0-1.bb
+@@ -10,7 +10,7 @@ AUTHOR = "Chris Lalancette <clalancette@osrfoundation.org>"
+ ROS_AUTHOR = "Ioan Sucan <isucan@willowgarage.com>"
+ HOMEPAGE = "http://eigen.tuxfamily.org/dox/TopicUnalignedArrayAssert.html"
+ SECTION = "devel"
+-LICENSE = "BSD"
++LICENSE = "BSD-3-Clause"
+ LIC_FILES_CHKSUM = "file://package.xml;beginline=10;endline=10;md5=d566ef916e9dedc494f5f793a6690ba5"
+ 
+ ROS_CN = "eigen_stl_containers"
+diff --git a/meta-ros2-jazzy/generated-recipes/eigenpy/eigenpy_3.10.3-1.bb b/meta-ros2-jazzy/generated-recipes/eigenpy/eigenpy_3.10.3-1.bb
+index 50ff6d482..92d2da2b9 100644
+--- a/meta-ros2-jazzy/generated-recipes/eigenpy/eigenpy_3.10.3-1.bb
++++ b/meta-ros2-jazzy/generated-recipes/eigenpy/eigenpy_3.10.3-1.bb
+@@ -10,7 +10,7 @@ AUTHOR = "Justin Carpentier <justin.carpentier@inria.fr>"
+ ROS_AUTHOR = "Justin Carpentier"
+ HOMEPAGE = "https://github.com/stack-of-tasks/eigenpy"
+ SECTION = "devel"
+-LICENSE = "BSD"
++LICENSE = "BSD-3-Clause"
+ LIC_FILES_CHKSUM = "file://package.xml;beginline=10;endline=10;md5=d566ef916e9dedc494f5f793a6690ba5"
+ 
+ ROS_CN = "eigenpy"
+@@ -23,7 +23,6 @@ ROS_BUILD_DEPENDS = " \
+     libeigen \
+     python3 \
+     python3-numpy \
+-    python3-scipy \
+ "
+ 
+ ROS_BUILDTOOL_DEPENDS = " \
+@@ -35,7 +34,6 @@ ROS_EXPORT_DEPENDS = " \
+     libeigen \
+     python3 \
+     python3-numpy \
+-    python3-scipy \
+ "
+ 
+ ROS_BUILDTOOL_EXPORT_DEPENDS = ""
+@@ -45,7 +43,6 @@ ROS_EXEC_DEPENDS = " \
+     libeigen \
+     python3 \
+     python3-numpy \
+-    python3-scipy \
+ "
+ 
+ # Currently informational only -- see http://www.ros.org/reps/rep-0149.html#dependency-tags.
+diff --git a/meta-ros2-jazzy/generated-recipes/hls-lfcd-lds-driver/hls-lfcd-lds-driver_2.1.0-1.bb b/meta-ros2-jazzy/generated-recipes/hls-lfcd-lds-driver/hls-lfcd-lds-driver_2.1.0-1.bb
+index 73fb06c5b..8b651092d 100644
+--- a/meta-ros2-jazzy/generated-recipes/hls-lfcd-lds-driver/hls-lfcd-lds-driver_2.1.0-1.bb
++++ b/meta-ros2-jazzy/generated-recipes/hls-lfcd-lds-driver/hls-lfcd-lds-driver_2.1.0-1.bb
+@@ -10,7 +10,7 @@ AUTHOR = "Pyo <pyo@robotis.com>"
+ ROS_AUTHOR = "Darby Lim <thlim@robotis.com>"
+ HOMEPAGE = "http://wiki.ros.org/hls_lfcd_lds_driver"
+ SECTION = "devel"
+-LICENSE = "BSD"
++LICENSE = "BSD-3-Clause"
+ LIC_FILES_CHKSUM = "file://package.xml;beginline=11;endline=11;md5=d566ef916e9dedc494f5f793a6690ba5"
+ 
+ ROS_CN = "hls_lfcd_lds_driver"
+diff --git a/meta-ros2-jazzy/generated-recipes/object-recognition-msgs/object-recognition-msgs_2.0.0-5.bb b/meta-ros2-jazzy/generated-recipes/object-recognition-msgs/object-recognition-msgs_2.0.0-5.bb
+index 17455271d..d23917357 100644
+--- a/meta-ros2-jazzy/generated-recipes/object-recognition-msgs/object-recognition-msgs_2.0.0-5.bb
++++ b/meta-ros2-jazzy/generated-recipes/object-recognition-msgs/object-recognition-msgs_2.0.0-5.bb
+@@ -10,7 +10,7 @@ AUTHOR = "Vincent Rabaud <vincent.rabaud@gmail.com>"
+ ROS_AUTHOR = "Vincent Rabaud <vincent.rabaud@gmail.com>"
+ HOMEPAGE = "http://www.ros.org/wiki/object_recognition"
+ SECTION = "devel"
+-LICENSE = "BSD"
++LICENSE = "BSD-3-Clause"
+ LIC_FILES_CHKSUM = "file://package.xml;beginline=7;endline=7;md5=d566ef916e9dedc494f5f793a6690ba5"
+ 
+ ROS_CN = "object_recognition_msgs"
+diff --git a/meta-ros2-jazzy/generated-recipes/random-numbers/random-numbers_2.0.1-5.bb b/meta-ros2-jazzy/generated-recipes/random-numbers/random-numbers_2.0.1-5.bb
+index 8af3efd2b..1133d75a1 100644
+--- a/meta-ros2-jazzy/generated-recipes/random-numbers/random-numbers_2.0.1-5.bb
++++ b/meta-ros2-jazzy/generated-recipes/random-numbers/random-numbers_2.0.1-5.bb
+@@ -10,7 +10,7 @@ AUTHOR = "Anas M'chichou <anasarrak@erlerobotics.com>"
+ ROS_AUTHOR = "Ioan Sucan <isucan@willowgarage.edu>"
+ HOMEPAGE = "http://ros.org/wiki/random_numbers"
+ SECTION = "devel"
+-LICENSE = "BSD"
++LICENSE = "BSD-3-Clause"
+ LIC_FILES_CHKSUM = "file://package.xml;beginline=14;endline=14;md5=d566ef916e9dedc494f5f793a6690ba5"
+ 
+ ROS_CN = "random_numbers"
+diff --git a/meta-ros2-jazzy/generated-recipes/ros2-control/controller-manager_4.28.1-1.bb b/meta-ros2-jazzy/generated-recipes/ros2-control/controller-manager_4.28.1-1.bb
+index 7c4df4ec3..9992b4a69 100644
+--- a/meta-ros2-jazzy/generated-recipes/ros2-control/controller-manager_4.28.1-1.bb
++++ b/meta-ros2-jazzy/generated-recipes/ros2-control/controller-manager_4.28.1-1.bb
+@@ -42,6 +42,7 @@ ROS_BUILDTOOL_DEPENDS = " \
+     ament-cmake-gen-version-h-native \
+     ament-cmake-native \
+     ament-cmake-python-native \
++    generate-parameter-library-py-native \
+ "
+ 
+ ROS_EXPORT_DEPENDS = " \
+diff --git a/meta-ros2-jazzy/generated-recipes/rsl/rsl_1.1.0-3.bb b/meta-ros2-jazzy/generated-recipes/rsl/rsl_1.1.0-3.bb
+index f763b02eb..36c3598db 100644
+--- a/meta-ros2-jazzy/generated-recipes/rsl/rsl_1.1.0-3.bb
++++ b/meta-ros2-jazzy/generated-recipes/rsl/rsl_1.1.0-3.bb
+@@ -26,6 +26,7 @@ ROS_BUILD_DEPENDS = " \
+ 
+ ROS_BUILDTOOL_DEPENDS = " \
+     doxygen-native \
++    ament-cmake-native \
+ "
+ 
+ ROS_EXPORT_DEPENDS = " \
+@@ -36,7 +37,12 @@ ROS_EXPORT_DEPENDS = " \
+     tl-expected \
+ "
+ 
+-ROS_BUILDTOOL_EXPORT_DEPENDS = ""
++ROS_BUILDTOOL_EXPORT_DEPENDS = " \
++    ament-cmake-export-include-directories \
++    ament-cmake-export-interfaces \
++    ament-cmake-export-libraries \
++    ament-cmake-export-link-flags \
++"
+ 
+ ROS_EXEC_DEPENDS = " \
+     fmt \
+@@ -57,6 +63,7 @@ DEPENDS = "${ROS_BUILD_DEPENDS} ${ROS_BUILDTOOL_DEPENDS}"
+ # Bitbake doesn't support the "export" concept, so build them as if we needed them to build this package (even though we actually
+ # don't) so that they're guaranteed to have been staged should this package appear in another's DEPENDS.
+ DEPENDS += "${ROS_EXPORT_DEPENDS} ${ROS_BUILDTOOL_EXPORT_DEPENDS}"
++DEPENDS += "ament-cmake-core ament-package-native ament-cmake-libraries ament-cmake ament-cmake-export-definitions"
+ 
+ RDEPENDS:${PN} += "${ROS_EXEC_DEPENDS}"
+ 
+diff --git a/meta-ros2-jazzy/generated-recipes/srdfdom/srdfdom_2.0.7-1.bb b/meta-ros2-jazzy/generated-recipes/srdfdom/srdfdom_2.0.7-1.bb
+index f9516b3df..8ad046058 100644
+--- a/meta-ros2-jazzy/generated-recipes/srdfdom/srdfdom_2.0.7-1.bb
++++ b/meta-ros2-jazzy/generated-recipes/srdfdom/srdfdom_2.0.7-1.bb
+@@ -10,7 +10,7 @@ AUTHOR = "MoveIt Release Team <moveit_releasers@googlegroups.com>"
+ ROS_AUTHOR = "Ioan Sucan <isucan@willowgarage.com>"
+ HOMEPAGE = "http://ros.org/wiki/srdfdom"
+ SECTION = "devel"
+-LICENSE = "BSD"
++LICENSE = "BSD-3-Clause"
+ LIC_FILES_CHKSUM = "file://package.xml;beginline=12;endline=12;md5=d566ef916e9dedc494f5f793a6690ba5"
+ 
+ ROS_CN = "srdfdom"
+diff --git a/meta-ros2-jazzy/generated-recipes/tf-transformations/tf-transformations_1.1.0-1.bb b/meta-ros2-jazzy/generated-recipes/tf-transformations/tf-transformations_1.1.0-1.bb
+index 1a31fd3e0..7b5b2578b 100644
+--- a/meta-ros2-jazzy/generated-recipes/tf-transformations/tf-transformations_1.1.0-1.bb
++++ b/meta-ros2-jazzy/generated-recipes/tf-transformations/tf-transformations_1.1.0-1.bb
+@@ -9,7 +9,7 @@ DESCRIPTION = "Reimplementation of the tf/transformations.py library for common
+ AUTHOR = "David V. Lu!! <davidvlu@gmail.com>"
+ HOMEPAGE = "https://wiki.ros.org"
+ SECTION = "devel"
+-LICENSE = "BSD"
++LICENSE = "BSD-3-Clause"
+ LIC_FILES_CHKSUM = "file://package.xml;beginline=10;endline=10;md5=d566ef916e9dedc494f5f793a6690ba5"
+ 
+ ROS_CN = "tf_transformations"
+diff --git a/meta-ros2-jazzy/generated-recipes/urdf-parser-py/urdfdom-py_1.2.1-3.bb b/meta-ros2-jazzy/generated-recipes/urdf-parser-py/urdfdom-py_1.2.1-3.bb
+index 48a1d0c9d..c6cf45025 100644
+--- a/meta-ros2-jazzy/generated-recipes/urdf-parser-py/urdfdom-py_1.2.1-3.bb
++++ b/meta-ros2-jazzy/generated-recipes/urdf-parser-py/urdfdom-py_1.2.1-3.bb
+@@ -10,7 +10,7 @@ AUTHOR = "Chris Lalancette <clalancette@openrobotics.org>"
+ ROS_AUTHOR = "Antonio El Khoury"
+ HOMEPAGE = "http://wiki.ros.org/urdfdom_py"
+ SECTION = "devel"
+-LICENSE = "BSD"
++LICENSE = "BSD-3-Clause"
+ LIC_FILES_CHKSUM = "file://package.xml;beginline=9;endline=9;md5=d566ef916e9dedc494f5f793a6690ba5"
+ 
+ ROS_CN = "urdf_parser_py"
+diff --git a/meta-ros2-jazzy/recipes-bbappends/control-toolbox/control-toolbox/do-not-set-compiler-options.patch b/meta-ros2-jazzy/recipes-bbappends/control-toolbox/control-toolbox/do-not-set-compiler-options.patch
+new file mode 100644
+index 000000000..44ad0f674
+--- /dev/null
++++ b/meta-ros2-jazzy/recipes-bbappends/control-toolbox/control-toolbox/do-not-set-compiler-options.patch
+@@ -0,0 +1,14 @@
++Upstream-Status: Pending
++diff --git a/CMakeLists.txt b/CMakeLists.txt
++index fc374e7..fcccb87 100644
++--- a/CMakeLists.txt
+++++ b/CMakeLists.txt
++@@ -3,6 +3,8 @@ project(control_toolbox LANGUAGES CXX)
++ 
++ find_package(ros2_control_cmake REQUIRED)
++ set_compiler_options()
+++# Override Werror=shadow -Wno-error=missing-braces
+++add_compile_options(-Wno-error=shadow -Wno-error=missing-braces)
++ 
++ if(WIN32)
++   add_compile_definitions(
+diff --git a/meta-ros2-jazzy/recipes-bbappends/control-toolbox/control-toolbox_4.2.0-1.bbappend b/meta-ros2-jazzy/recipes-bbappends/control-toolbox/control-toolbox_4.2.0-1.bbappend
+new file mode 100644
+index 000000000..762b50d98
+--- /dev/null
++++ b/meta-ros2-jazzy/recipes-bbappends/control-toolbox/control-toolbox_4.2.0-1.bbappend
+@@ -0,0 +1,2 @@
++FILESEXTRAPATHS:prepend := "${THISDIR}/${BPN}:"
++SRC_URI += "file://do-not-set-compiler-options.patch"
+\ No newline at end of file
+diff --git a/meta-ros2-jazzy/recipes-bbappends/eigenpy/eigenpy/eigenpy-release b/meta-ros2-jazzy/recipes-bbappends/eigenpy/eigenpy/eigenpy-release
+new file mode 160000
+index 000000000..deef393a8
+--- /dev/null
++++ b/meta-ros2-jazzy/recipes-bbappends/eigenpy/eigenpy/eigenpy-release
+@@ -0,0 +1 @@
++Subproject commit deef393a8fcd5a6caf55657799ec4294e67c3ecc
+diff --git a/meta-ros2-jazzy/recipes-bbappends/eigenpy/eigenpy_3.10.3-1.bbappend b/meta-ros2-jazzy/recipes-bbappends/eigenpy/eigenpy_3.10.3-1.bbappend
+index 791d4e688..1012338ad 100644
+--- a/meta-ros2-jazzy/recipes-bbappends/eigenpy/eigenpy_3.10.3-1.bbappend
++++ b/meta-ros2-jazzy/recipes-bbappends/eigenpy/eigenpy_3.10.3-1.bbappend
+@@ -2,6 +2,8 @@
+ 
+ ROS_BUILDTOOL_DEPENDS += "python3-numpy-native"
+ 
++#SRC_URI += "file://0001-disable-unittests.patch \
++#"
+ inherit python3native
+ 
+ # ERROR: eigenpy-2.7.14-1-r0 do_package: QA Issue: eigenpy: Files/directories were installed but not shipped in any package:
+diff --git a/meta-ros2-jazzy/recipes-bbappends/gz-cmake-vendor/gz-cmake-vendor_0.0.9-1.bbappend b/meta-ros2-jazzy/recipes-bbappends/gz-cmake-vendor/gz-cmake-vendor_0.0.9-1.bbappend
+index 280aab81c..e22730684 100644
+--- a/meta-ros2-jazzy/recipes-bbappends/gz-cmake-vendor/gz-cmake-vendor_0.0.9-1.bbappend
++++ b/meta-ros2-jazzy/recipes-bbappends/gz-cmake-vendor/gz-cmake-vendor_0.0.9-1.bbappend
+@@ -1,6 +1,9 @@
+ # Copyright (c) 2024 Wind River Systems, Inc.
+ 
+-ROS_BUILD_DEPENDS += "gz-cmake4"
++ROS_BUILD_DEPENDS += "\
++gz-cmake4   \
++gz-cmake3   \
++"
+ 
+ # See CMakeLists.txt for details on why /usr/opt/gz_cmake_vendor/ is used
+ FILES:${PN} += "${datadir}/gz/gz-cmake4/* \
+diff --git a/meta-ros2-jazzy/recipes-bbappends/joint-trajectory-controller/joint-trajectory-controller/do-not-set-compiler-options.patch b/meta-ros2-jazzy/recipes-bbappends/joint-trajectory-controller/joint-trajectory-controller/do-not-set-compiler-options.patch
+new file mode 100644
+index 000000000..973c5b494
+--- /dev/null
++++ b/meta-ros2-jazzy/recipes-bbappends/joint-trajectory-controller/joint-trajectory-controller/do-not-set-compiler-options.patch
+@@ -0,0 +1,14 @@
++Upstream-Status: Pending
++diff --git a/CMakeLists.txt b/CMakeLists.txt
++index 58a6378e19..0eb0aef660 100644
++--- a/CMakeLists.txt
+++++ b/CMakeLists.txt
++@@ -3,6 +3,8 @@ project(joint_trajectory_controller)
++ 
++ find_package(ros2_control_cmake REQUIRED)
++ set_compiler_options()
+++# Override Werror=shadow -Wno-error=missing-braces
+++add_compile_options(-Wno-error=shadow -Wno-error=missing-braces)
++ export_windows_symbols()
++ 
++ set(THIS_PACKAGE_INCLUDE_DEPENDS
+diff --git a/meta-ros2-jazzy/recipes-bbappends/joint-trajectory-controller/joint-trajectory-controller_4.23.0-1.bbappend b/meta-ros2-jazzy/recipes-bbappends/joint-trajectory-controller/joint-trajectory-controller_4.23.0-1.bbappend
+new file mode 100644
+index 000000000..762b50d98
+--- /dev/null
++++ b/meta-ros2-jazzy/recipes-bbappends/joint-trajectory-controller/joint-trajectory-controller_4.23.0-1.bbappend
+@@ -0,0 +1,2 @@
++FILESEXTRAPATHS:prepend := "${THISDIR}/${BPN}:"
++SRC_URI += "file://do-not-set-compiler-options.patch"
+\ No newline at end of file
+diff --git a/meta-ros2-jazzy/recipes-bbappends/ros2-control/controller-interface/do-not-set-compiler-options.patch b/meta-ros2-jazzy/recipes-bbappends/ros2-control/controller-interface/do-not-set-compiler-options.patch
+new file mode 100644
+index 000000000..8e5143328
+--- /dev/null
++++ b/meta-ros2-jazzy/recipes-bbappends/ros2-control/controller-interface/do-not-set-compiler-options.patch
+@@ -0,0 +1,20 @@
++Do not set compiler options
++
++Upstream-Status: Pending
++
++Signed-off-by: Stephen Street <stephen@redrocketcomputing.com>
++Signed-off-by: Rob Woolley <rob.woolley@windriver.com>
++
++diff --git a/CMakeLists.txt b/CMakeLists.txt
++index 069f96852..d4e5a7773 100644
++--- a/CMakeLists.txt
+++++ b/CMakeLists.txt
++@@ -3,6 +3,8 @@ project(controller_interface LANGUAGES CXX)
++ 
++ find_package(ros2_control_cmake REQUIRED)
++ set_compiler_options()
+++# Override Werror=shadow -Wno-error=missing-braces
+++add_compile_options(-Wno-error=shadow -Wno-error=missing-braces)
++ export_windows_symbols()
++ 
++ set(THIS_PACKAGE_INCLUDE_DEPENDS
+diff --git a/meta-ros2-jazzy/recipes-bbappends/ros2-control/controller-interface_4.28.1-1.bbappend b/meta-ros2-jazzy/recipes-bbappends/ros2-control/controller-interface_4.28.1-1.bbappend
+index b122d7e34..0b03eb1bb 100644
+--- a/meta-ros2-jazzy/recipes-bbappends/ros2-control/controller-interface_4.28.1-1.bbappend
++++ b/meta-ros2-jazzy/recipes-bbappends/ros2-control/controller-interface_4.28.1-1.bbappend
+@@ -1,4 +1,6 @@
+ # Copyright (c) 2022 Wind River Systems, Inc.
++FILESEXTRAPATHS:prepend := "${THISDIR}/${BPN}:"
++SRC_URI += "file://do-not-set-compiler-options.patch"
+ 
+ ROS_BUILDTOOL_DEPENDS = " \
+     ament-cmake-ros-native \
+diff --git a/meta-ros2-jazzy/recipes-bbappends/ros2-control/controller-manager/0001-setuptools-fix-executable.patch b/meta-ros2-jazzy/recipes-bbappends/ros2-control/controller-manager/0001-setuptools-fix-executable.patch
+index 833b7834e..2773ec5e6 100644
+--- a/meta-ros2-jazzy/recipes-bbappends/ros2-control/controller-manager/0001-setuptools-fix-executable.patch
++++ b/meta-ros2-jazzy/recipes-bbappends/ros2-control/controller-manager/0001-setuptools-fix-executable.patch
+@@ -1,10 +1,11 @@
++Upstream-Status: Pending
+ diff --git a/setup.cfg b/setup.cfg
+ index ef02ee65..66c2850b 100644
+ --- a/setup.cfg
+ +++ b/setup.cfg
+ @@ -1,3 +1,5 @@
+ +[build]
+-+executable=/usr/bin/env python
+++executable=/usr/bin/env python3
+  [options.entry_points]
+  console_scripts =
+      spawner = controller_manager.spawner:main
+diff --git a/meta-ros2-jazzy/recipes-bbappends/ros2-control/controller-manager/do-not-set-compiler-options.patch b/meta-ros2-jazzy/recipes-bbappends/ros2-control/controller-manager/do-not-set-compiler-options.patch
+new file mode 100644
+index 000000000..8e5143328
+--- /dev/null
++++ b/meta-ros2-jazzy/recipes-bbappends/ros2-control/controller-manager/do-not-set-compiler-options.patch
+@@ -0,0 +1,20 @@
++Do not set compiler options
++
++Upstream-Status: Pending
++
++Signed-off-by: Stephen Street <stephen@redrocketcomputing.com>
++Signed-off-by: Rob Woolley <rob.woolley@windriver.com>
++
++diff --git a/CMakeLists.txt b/CMakeLists.txt
++index 069f96852..d4e5a7773 100644
++--- a/CMakeLists.txt
+++++ b/CMakeLists.txt
++@@ -3,6 +3,8 @@ project(controller_interface LANGUAGES CXX)
++ 
++ find_package(ros2_control_cmake REQUIRED)
++ set_compiler_options()
+++# Override Werror=shadow -Wno-error=missing-braces
+++add_compile_options(-Wno-error=shadow -Wno-error=missing-braces)
++ export_windows_symbols()
++ 
++ set(THIS_PACKAGE_INCLUDE_DEPENDS
+diff --git a/meta-ros2-jazzy/recipes-bbappends/ros2-control/controller-manager_4.28.1-1.bbappend b/meta-ros2-jazzy/recipes-bbappends/ros2-control/controller-manager_4.28.1-1.bbappend
+index 25b5e4b69..fcf050bba 100644
+--- a/meta-ros2-jazzy/recipes-bbappends/ros2-control/controller-manager_4.28.1-1.bbappend
++++ b/meta-ros2-jazzy/recipes-bbappends/ros2-control/controller-manager_4.28.1-1.bbappend
+@@ -15,4 +15,6 @@ ROS_BUILDTOOL_DEPENDS += " \
+ "
+ 
+ FILESEXTRAPATHS:prepend := "${THISDIR}/${BPN}:"
+-SRC_URI += "file://0001-setuptools-fix-executable.patch"
++SRC_URI += "file://0001-setuptools-fix-executable.patch \
++            file://do-not-set-compiler-options.patch \
++            "
+diff --git a/meta-ros2-jazzy/recipes-bbappends/ros2-control/hardware-interface/do-not-set-compiler-options.patch b/meta-ros2-jazzy/recipes-bbappends/ros2-control/hardware-interface/do-not-set-compiler-options.patch
+new file mode 100644
+index 000000000..e951dc19c
+--- /dev/null
++++ b/meta-ros2-jazzy/recipes-bbappends/ros2-control/hardware-interface/do-not-set-compiler-options.patch
+@@ -0,0 +1,20 @@
++Do not set compiler options
++
++Upstream-Status: Pending
++
++Signed-off-by: Stephen Street <stephen@redrocketcomputing.com>
++Signed-off-by: Rob Woolley <rob.woolley@windriver.com>
++
++diff --git a/CMakeLists.txt b/CMakeLists.txt
++index 682427bdc..560313619 100644
++--- a/CMakeLists.txt
+++++ b/CMakeLists.txt
++@@ -3,6 +3,8 @@ project(hardware_interface LANGUAGES CXX)
++ 
++ find_package(ros2_control_cmake REQUIRED)
++ set_compiler_options()
+++# Override Werror=shadow -Wno-error=missing-braces
+++add_compile_options(-Wno-error=shadow -Wno-error=missing-braces)
++ export_windows_symbols()
++ 
++ set(THIS_PACKAGE_INCLUDE_DEPENDS
+diff --git a/meta-ros2-jazzy/recipes-bbappends/ros2-control/hardware-interface_4.28.1-1.bbappend b/meta-ros2-jazzy/recipes-bbappends/ros2-control/hardware-interface_4.28.1-1.bbappend
+index b122d7e34..131f2dfe9 100644
+--- a/meta-ros2-jazzy/recipes-bbappends/ros2-control/hardware-interface_4.28.1-1.bbappend
++++ b/meta-ros2-jazzy/recipes-bbappends/ros2-control/hardware-interface_4.28.1-1.bbappend
+@@ -1,6 +1,13 @@
+ # Copyright (c) 2022 Wind River Systems, Inc.
++FILESEXTRAPATHS:prepend := "${THISDIR}/${BPN}:"
++SRC_URI += "file://do-not-set-compiler-options.patch"
+ 
+ ROS_BUILDTOOL_DEPENDS = " \
+     ament-cmake-ros-native \
+     python3-numpy-native \
+ "
++do_install:append() {
++    sed -i -e "s#${RECIPE_SYSROOT}/opt/ros/jazzy#\${_IMPORT_PREFIX}#g" ${D}${ros_datadir}/hardware_interface/cmake/export_hardware_interfaceExport.cmake
++    # DEBUG: copy build artifacts to tmp so ta có thể inspect nếu lỗi
++    cp -r ${D}/opt/ros/jazzy/share/hardware_interface/cmake ${WORKDIR}/debug-cmake
++}
+diff --git a/meta-ros2-jazzy/recipes-bbappends/topic-tools/topic-tools/0001-setuptools-fix-executable.patch b/meta-ros2-jazzy/recipes-bbappends/topic-tools/topic-tools/0001-setuptools-fix-executable.patch
+index 876bc9573..63a363e99 100644
+--- a/meta-ros2-jazzy/recipes-bbappends/topic-tools/topic-tools/0001-setuptools-fix-executable.patch
++++ b/meta-ros2-jazzy/recipes-bbappends/topic-tools/topic-tools/0001-setuptools-fix-executable.patch
+@@ -1,12 +1,13 @@
++Upstream-Status: Pending
+ diff --git a/topic_tools/setup.cfg b/topic_tools/setup.cfg
+ index 7c0fef2..90b577f 100644
+ --- a/topic_tools/setup.cfg
+ +++ b/topic_tools/setup.cfg
+ @@ -1,5 +1,7 @@
+  [develop]
+- script-dir=$base/lib/topic_tools
++ script_dir=$base/lib/topic_tools
+ +[build]
+-+executable=/usr/bin/env python
+++executable=/usr/bin/env python3
+  [install]
+- install-scripts=$base/lib/topic_tools
++ install_scripts=$base/lib/topic_tools
+  [options.entry_points]

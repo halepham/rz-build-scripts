@@ -27,6 +27,15 @@
 		"type": "git",
 		"enable": "true"
 	},
+	"meta-ros": {
+		"url": "https://github.com/ros/meta-ros.git",
+		"branch": "styhead",
+		"tag": "",
+		"commit": "7f598fe2bce3473b46814230ccd856326c024307",
+		"patches": ["patches/meta-ros/0001-Fixcompatible-recipes.patch"],
+		"type": "git",
+		"enable": "false"
+	},
 	"meta-qt5": {
 		"url": "https://github.com/meta-qt5/meta-qt5.git",
 		"branch": "master",
@@ -84,6 +93,15 @@
 	"meta-browser": {
 		"url": "https://github.com/OSSystems/meta-browser.git",
 		"branch": "master",
+		"tag": "",
+		"commit": "",
+		"patches": [],
+		"type": "git",
+		"enable": "false"
+	},
+	"meta-rz-features-ros": {
+		"url": "https://github.com/congnguyenzn/meta-rz-features-ros.git",
+		"branch": "rzv2h-evk-ver1",
 		"tag": "",
 		"commit": "",
 		"patches": [],
