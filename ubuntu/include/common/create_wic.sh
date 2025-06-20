@@ -1,100 +1,104 @@
 #!/bin/bash
 # --------------------------------------------------------------------------#
 # Description:
-# The function creates a WIC (Windows Image) file from the Ubuntu root filesystem (rootfs)
+#   Creates a bootable .img disk image for Renesas RZ/V2H EVK board
+#   Includes rootfs and bootloader flashing (BL2, FIP) into raw sectors.
 # --------------------------------------------------------------------------#
 
-# --------------------------------------------------------------------------#
-# function create_wic contain 5 steps:
-# Step 1: Create blank *.wic
-# Step 2: Create 2 partition using fdisk
-# Step 3: Format partition
-# Step 4: Mount and copy data
-# Step 5: Clean up
-# Step 6: Create file tar.gz from .wic file
-# --------------------------------------------------------------------------#
+set -e
 
-create_wic() {
-	sudo apt-get update
-	sudo apt-get install -y parted multipath-tools kpartx dosfstools e2fsprogs
+# ---------------------- Configurable Parameters ----------------------------
 
-	ROOTFS_DIR="./rootfs"
-	# Set output wic file name to ubuntu-image-qt-rzpi.wic by default if not defined
-	OUTPUT_WIC="${OUTPUT_WIC:=ubuntu-image-qt-rzpi.wic}"
+if [[ $# -ne 1 ]]; then
+    ROOTFS_DIR="./rootfs"  # Default root filesystem directory
+else
+    ROOTFS_DIR=$1  # Extracted root filesystem directory
+fi
+MACHINE="rzv2h-evk-ver1"
+OUTPUT_IMG="ubuntu-image-${MACHINE}.img"
+OUTPUT_IMG_ZIP="ubuntu-image-${MACHINE}.zip"
+BOOT_SIZE_MB=200
+ROOTFS_SPACE_MB=1024  # Extra space to avoid full disk
+BL2_BIN="bl2_bp_esd-${MACHINE}.bin"
+FIP_BIN="fip-${MACHINE}.bin"
 
-	# Set boot size to 200MB by default if not defined
-	BOOT_SIZE_MB=${BOOT_SIZE_MB:-200}
+# ---------------------- Calculate Image Size ------------------------------
 
-	# Set rootfs size to 5000MB by default if not defined
-	ROOTFS_SPACE=${ROOTFS_SPACE:-5000}
-	ROOTFS_SIZE_MB=$(du -s -B 1048576 "$ROOTFS_DIR" 2>/dev/null |awk '{print $1}')
+ROOTFS_SIZE_MB=$(du -s -B 1M "$ROOTFS_DIR" | awk '{print $1}')
+TOTAL_SIZE_MB=$((4 + BOOT_SIZE_MB + ROOTFS_SIZE_MB + ROOTFS_SPACE_MB + 10))  # 4MB offset + buffer
 
-	# Calculate total size for WIC, add space
-	TOTAL_SIZE_MB=$((BOOT_SIZE_MB + ROOTFS_SIZE_MB + ROOTFS_SPACE))
+echo "[INFO] Creating blank image: ${OUTPUT_IMG} (${TOTAL_SIZE_MB}MB)..."
+dd if=/dev/zero of="$OUTPUT_IMG" bs=1M count="$TOTAL_SIZE_MB" status=progress
+sync
 
-	# Step 1: Create blank *.wic
-	echo "Creating blank WIC file : ${TOTAL_SIZE_MB}MB..."
-	dd if=/dev/zero of="$OUTPUT_WIC" bs=1M count="$TOTAL_SIZE_MB" status=progress
-	if [ $? -eq 1 ]; then
-		echo "Create WIC failed."
-		return 1
-	fi
-	# Step 2: Create 2 partition using fdisk
-	echo "Create 2 partition in $OUTPUT_WIC..."
-	LOOP_DEVICE=$(sudo losetup -f --show "$OUTPUT_WIC")
+# ---------------------- Create Partition Table ----------------------------
 
-	sudo parted "$LOOP_DEVICE" mklabel msdos
-	sudo parted "$LOOP_DEVICE" mkpart primary fat32 1MiB "$((BOOT_SIZE_MB + 1))MiB"
-	sudo parted "$LOOP_DEVICE" mkpart primary ext4 "$((BOOT_SIZE_MB + 1))MiB" "$((TOTAL_SIZE_MB - 1))MiB"
+LOOP_DEV=$(sudo losetup -f --show "$OUTPUT_IMG")
+echo "[INFO] Loop device: $LOOP_DEV"
 
-	# Reload partition
-	# sudo partprobe "$LOOP_DEVICE"
+# Use a 4MB offset for first partition (8192 sectors)
+BOOT_START_MB=4
+ROOTFS_START_MB=$((BOOT_START_MB + BOOT_SIZE_MB))
 
-	# Mount to loop device
-	sudo losetup -d "$LOOP_DEVICE"
-	LOOP_DEVICE=$(sudo losetup -f --show -P "$OUTPUT_WIC")
-	sudo kpartx -av "$LOOP_DEVICE"
-	LOOP_NAME=$(basename "$LOOP_DEVICE")
+echo "[INFO] Creating partitions..."
+sudo parted "$LOOP_DEV" --script mklabel msdos
+sudo parted "$LOOP_DEV" --script mkpart primary fat32 ${BOOT_START_MB}MiB $((ROOTFS_START_MB))MiB
+sudo parted "$LOOP_DEV" --script mkpart primary ext4 ${ROOTFS_START_MB}MiB 100%
+sync
+sleep 1
+sudo losetup -d "$LOOP_DEV"
 
-	BOOT_PART="/dev/mapper/${LOOP_NAME}p1"
-	ROOTFS_PART="/dev/mapper/${LOOP_NAME}p2"
+# ---------------------- Map and Format Partitions -------------------------
 
-	# Step 3: Format partition
-	echo "Format boot partition (FAT32)..."
-	sudo mkfs.vfat "$BOOT_PART" -n boot
+LOOP_DEV=$(sudo losetup -f --show -P "$OUTPUT_IMG")
+LOOP_NAME=$(basename "$LOOP_DEV")
+sudo kpartx -av "$LOOP_DEV"
 
-	echo "Format rootfs partition (EXT4)..."
-	sudo mkfs.ext4 "$ROOTFS_PART" -L rootfs
+BOOT_PART="/dev/mapper/${LOOP_NAME}p1"
+ROOTFS_PART="/dev/mapper/${LOOP_NAME}p2"
 
-	# Step 4: Mount and copy data
-	MOUNT_DIR=$(mktemp -d)
+echo "[INFO] Formatting partitions..."
+sudo mkfs.vfat "$BOOT_PART" -n boot
+sudo mkfs.ext4 "$ROOTFS_PART" -L rootfs
 
-	echo "Copy data to boot partition..."
-	sudo mount "$BOOT_PART" "$MOUNT_DIR"
-	sudo cp -r "$ROOTFS_DIR/boot/"* "$MOUNT_DIR"
-	sudo mv "$MOUNT_DIR/Image"* "$MOUNT_DIR/Image"
-	sudo mv "$MOUNT_DIR/dtb/renesas/rzpi"* "$MOUNT_DIR/dtb/renesas/rzpi.dtb"
-	sync
-	echo "Partition Boot has :"
-	ls "$MOUNT_DIR"
-	sudo umount "$MOUNT_DIR"
+# ---------------------- Mount & Populate File Systems ---------------------
 
-	echo "Copying rootfs..."
-	sudo mount "$ROOTFS_PART" "$MOUNT_DIR"
-	sudo cp -arf "$ROOTFS_DIR/"* "$MOUNT_DIR"
-	sync
-	echo "Partition Rootfs has :"
-	ls "$MOUNT_DIR"
-	sudo umount "$MOUNT_DIR"
+MOUNT_BOOT=$(mktemp -d)
+MOUNT_ROOT=$(mktemp -d)
 
-	# Step 5: Clean up
-	sync
-	sudo kpartx -d "$LOOP_DEVICE"
-	sudo losetup -d "$LOOP_DEVICE"
-	rmdir "$MOUNT_DIR"
+echo "[INFO] Copying boot files..."
+sudo mount "$BOOT_PART" "$MOUNT_BOOT"
+sudo cp "$ROOTFS_DIR/boot/bl2_bp_spi-${MACHINE}.bin" "$MOUNT_BOOT/"
+sudo cp "$ROOTFS_DIR/boot/${FIP_BIN}" "$MOUNT_BOOT/"
+sudo cp "$ROOTFS_DIR/boot/Image"* "$MOUNT_BOOT/"
+sudo cp "$ROOTFS_DIR/boot/r9a09g057h4-evk-ver1"* "$MOUNT_BOOT/"
+sync
+sleep 1
+sudo umount "$MOUNT_BOOT"
 
-	# Step 6 : Create file tar.gz from .wic file
-	sudo gzip "$OUTPUT_WIC" || { echo "Failed to compress .wic into .wic.gz"; return 1; }
-	echo "File WIC has been created: $OUTPUT_WIC"
-	return 0
-}
+echo "[INFO] Copying root filesystem..."
+sudo mount "$ROOTFS_PART" "$MOUNT_ROOT"
+sudo cp -a "$ROOTFS_DIR/"* "$MOUNT_ROOT/"
+sudo umount "$MOUNT_ROOT"
+
+# ---------------------- Write Bootloaders to Raw Image ---------------------
+
+echo "[INFO] Writing bootloaders to image..."
+dd if="$ROOTFS_DIR/boot/${BL2_BIN}" of="$OUTPUT_IMG" bs=512 seek=1 conv=notrunc status=progress
+dd if="$ROOTFS_DIR/boot/${FIP_BIN}" of="$OUTPUT_IMG" bs=512 seek=768 conv=notrunc status=progress
+
+# ---------------------- Cleanup --------------------------------------------
+
+sync
+sudo kpartx -d "$LOOP_DEV"
+sudo losetup -d "$LOOP_DEV"
+rm -rf "$MOUNT_BOOT" "$MOUNT_ROOT"
+
+# Create zip file for the image
+zip $OUTPUT_IMG_ZIP $OUTPUT_IMG
+
+echo "[SUCCESS] Bootable .img file created: $OUTPUT_IMG"
+echo "[SUCCESS] Bootable .zip file created: $OUTPUT_IMG_ZIP"
+
+# Clean up the image file
+rm -f "$OUTPUT_IMG"
