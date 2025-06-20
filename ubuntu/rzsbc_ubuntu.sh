@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -xv
 # --------------------------------------------------------------------------------#
 # Description:
 # The main function orchestrates the entire process by calling a series of
@@ -58,6 +58,7 @@ source_env(){
 . include/common/create_wic.sh
 . include/common/install_gstreamer.sh
 . include/common/install_weston.sh
+. include/common/install_library.sh
 . include/common/yocto_working.sh
 . include/common/prepare_ubuntu_base.sh
 . include/common/allow_empty_password.sh
@@ -132,7 +133,7 @@ main_ubuntu_core(){
 	# Run the script 'apt_install_base.sh' inside chroot environment
 	chroot_run_1_script "apt_install_base.sh"
 	if [ $? -eq 1 ]; then
-		echo "set_config failed."
+		echo "apt install base failed."
 		exit 1
 	fi
 
@@ -157,19 +158,26 @@ main_ubuntu_core(){
 		exit 1
 	fi
 
-	# Install gstreamer to ubuntu
-	install_gstreamer "rootfs" "qt_rootfs_source"
+	# Install library to ubuntu
+	install_library "rootfs" "qt_rootfs_source"
 	if [ $? -eq 1 ]; then
-		echo "install_gstreamer failed."
+		echo "install_library failed."
 		exit 1
 	fi
 
+	# Install gstreamer to ubuntu
+	# install_gstreamer "rootfs" "qt_rootfs_source"
+	# if [ $? -eq 1 ]; then
+	# 	echo "install_gstreamer failed."
+	# 	exit 1
+	# fi
+
 	# Install weston to ubuntu
-	install_weston "rootfs" "qt_rootfs_source"
-	if [ $? -eq 1 ]; then
-		echo "install_weston failed."
-		exit 1
-	fi
+	# install_weston "rootfs" "qt_rootfs_source"
+	# if [ $? -eq 1 ]; then
+	# 	echo "install_weston failed."
+	# 	exit 1
+	# fi
 
 	# Package the root filesystem into a compressed archive (tarball)
 	package_rootfs
@@ -210,14 +218,6 @@ main_ubuntu_lxde(){
 		echo "prepare_env failed."
 		exit 1
 	fi
-
-	# Install qemu-user-static
-	install_qemu
-	if [ $? -eq 1 ]; then
-		echo "install_qemu failed."
-		exit 1
-	fi
-	echo "install_qemu completed successfully."
 
 	# Prepare ubuntu base
 	ubuntu_base_prepare
@@ -268,37 +268,17 @@ main_ubuntu_lxde(){
 		exit 1
 	fi
 
-	# Install wifi and bluetooth packages
-	chroot_run_1_script "apt_wifi_ble.sh"
+	# Install ubuntu gnome desktop
+	chroot_run_1_script "apt_ubuntu_gnome_desktop.sh"
 	if [ $? -eq 1 ]; then
-		echo "apt_wifi_ble failed."
+		echo "apt_ubuntu_gnome_desktop failed."
 		exit 1
 	fi
 
-	# Install lxde desktop
-	chroot_run_1_script "apt_lxde_desktop.sh"
+	# Install ROS2 Jazzy packages
+	chroot_run_1_script "apt_install_ros2.sh"
 	if [ $? -eq 1 ]; then
-		echo "apt_lxde_desktop failed."
-		exit 1
-	fi
-
-	# Install blueman for bluetooth (on 20.04 and above)
-	# Get the ubuntu version
-	version=$(echo "$UBUNTU_BASE_FILE_NAME" | grep -oP '\d+\.\d+')
-	major_version=$(echo "$version" | cut -d '.' -f 1)
-
-	if [ "$major_version" -ge 20 ]; then
-		chroot_run_1_script "apt_blueman.sh"
-	fi
-	if [ $? -eq 1 ]; then
-		echo "apt_blueman failed."
-		exit 1
-	fi
-
-	# Install audio and video packages
-	chroot_run_1_script "apt_audio_video.sh"
-	if [ $? -eq 1 ]; then
-		echo "apt_audio_video failed."
+		echo "apt_install_ros2 failed."
 		exit 1
 	fi
 
