@@ -58,23 +58,23 @@ install_gstreamer() {
 
 	#----------------------------porting mmngr----------------------------
 	#include
-	sudo cp $wic_rootfs/usr/local/include/mmngr_private_cmn.h  $rootfs/usr/local/include/
-	sudo cp $wic_rootfs/usr/local/include/mmngr_public_cmn.h  $rootfs/usr/local/include/
-	sudo cp $wic_rootfs/usr/local/include/mmngr_user_private.h  $rootfs/usr/local/include/
-	sudo cp $wic_rootfs/usr/local/include/mmngr_user_public.h  $rootfs/usr/local/include/
+	# sudo cp $wic_rootfs/usr/local/include/mmngr_private_cmn.h  $rootfs/usr/local/include/
+	# sudo cp $wic_rootfs/usr/local/include/mmngr_public_cmn.h  $rootfs/usr/local/include/
+	# sudo cp $wic_rootfs/usr/local/include/mmngr_user_private.h  $rootfs/usr/local/include/
+	# sudo cp $wic_rootfs/usr/local/include/mmngr_user_public.h  $rootfs/usr/local/include/
 
 	#lib
-	sudo rsync -avl $wic_rootfs/usr/lib/libmmngr* $rootfs/usr/lib/aarch64-linux-gnu/
+	# sudo rsync -avl $wic_rootfs/usr/lib/libmmngr* $rootfs/usr/lib/aarch64-linux-gnu/
 
 
 	#----------------------------porting mmngrbuf----------------------------
-	#include
-	sudo cp $wic_rootfs/usr/local/include/mmngr_buf_private_cmn.h  $rootfs/usr/local/include/
-	sudo cp $wic_rootfs/usr/local/include/mmngr_buf_user_private.h  $rootfs/usr/local/include/
-	sudo cp $wic_rootfs/usr/local/include/mmngr_buf_user_public.h $rootfs/usr/local/include/
+	# include
+	# sudo cp $wic_rootfs/usr/local/include/mmngr_buf_private_cmn.h  $rootfs/usr/local/include/
+	# sudo cp $wic_rootfs/usr/local/include/mmngr_buf_user_private.h  $rootfs/usr/local/include/
+	# sudo cp $wic_rootfs/usr/local/include/mmngr_buf_user_public.h $rootfs/usr/local/include/
 
 	#lib
-	sudo rsync -avl $wic_rootfs/usr/lib/libmmngrbuf* $rootfs/usr/lib/aarch64-linux-gnu/
+	# sudo rsync -avl $wic_rootfs/usr/lib/libmmngrbuf* $rootfs/usr/lib/aarch64-linux-gnu/
 
 	#----------------------------porting gstreamer1.0----------------------------
 	#bin

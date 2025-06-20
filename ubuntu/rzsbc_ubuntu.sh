@@ -166,11 +166,11 @@ main_ubuntu_core(){
 	fi
 
 	# Install gstreamer to ubuntu
-	# install_gstreamer "rootfs" "qt_rootfs_source"
-	# if [ $? -eq 1 ]; then
-	# 	echo "install_gstreamer failed."
-	# 	exit 1
-	# fi
+	install_gstreamer "rootfs" "qt_rootfs_source"
+	if [ $? -eq 1 ]; then
+		echo "install_gstreamer failed."
+		exit 1
+	fi
 
 	# Install weston to ubuntu
 	# install_weston "rootfs" "qt_rootfs_source"
