@@ -42,6 +42,10 @@ install_gstreamer() {
 	sudo rsync -avl $wic_rootfs/usr/lib/libomxr* $rootfs/usr/lib/aarch64-linux-gnu/
 	sudo rsync -avl $wic_rootfs/usr/lib/libuvcs* $rootfs/usr/lib/aarch64-linux-gnu/
 
+	# W/A for AI SDK 5.2, remove when using AI SDK 6.0 or later
+	sudo mkdir -p $rootfs/usr/lib64
+	sudo rsync -avl $wic_rootfs/usr/lib/libdrp_api.so $rootfs/usr/lib64/
+
 	#----------------------------porting vspm----------------------------
 	cp $wic_rootfs/usr/local/include/fdp_drv.h  $rootfs/usr/local/include/
 	cp $wic_rootfs/usr/local/include/isu_drv.h  $rootfs/usr/local/include/
