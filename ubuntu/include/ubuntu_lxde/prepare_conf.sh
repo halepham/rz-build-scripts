@@ -130,8 +130,6 @@ copy_file_conf() {
 # 3. Set up log file for syslog
 # 4. Set LightDM configuration
 # 5. Configure network interfaces
-# 6. Configure network manager
-# 7. Configure camera ov5640
 #######################################
 set_config() {
 	echo "Setting configuration..."
@@ -161,38 +159,10 @@ set_config() {
 		return 1
 	fi
 
-	# Set LightDM configuration
-	copy_file_conf "lightdm.conf" "rootfs/etc/lightdm" "644"
-	if [ $? -eq 1 ]; then
-		echo "Failed to configure LightDM. Exiting."
-		return 1
-	fi
-
 	# Configure network interfaces
-	copy_file_conf "interfaces" "rootfs/etc/network" "644"
+	copy_file_conf "01-netcfg.yaml" "rootfs/etc/netplan" "644"
 	if [ $? -eq 1 ]; then
 		echo "Failed to configure network interfaces. Exiting."
-		return 1
-	fi
-
-	# Configure network manager
-	copy_file_conf "NetworkManager.conf" "rootfs/etc/NetworkManager" "644"
-	if [ $? -eq 1 ]; then
-		echo "Failed to configure network manager. Exiting."
-		return 1
-	fi
-
-	# Configure camera ov5640
-	copy_file_conf "v4l2-init.sh" "rootfs/etc/profile.d" "755"
-	if [ $? -eq 1 ]; then
-		echo "Failed to configure camera ov5640. Exiting."
-		return 1
-	fi
-
-	# Configure connman-gtk to appear at System Tray
-	copy_file_conf "connman-gtk.desktop" "rootfs/etc/xdg/autostart" "755"
-	if [ $? -eq 1 ]; then
-		echo "Failed to configure connman-gtk. Exiting."
 		return 1
 	fi
 

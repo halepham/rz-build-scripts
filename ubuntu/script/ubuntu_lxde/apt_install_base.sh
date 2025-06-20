@@ -24,7 +24,7 @@ TIME_ZONE_CITY="${TIME_ZONE_CITY:=Ho_Chi_Minh}"
 echo "tzdata tzdata/Areas select $TIME_ZONE_AREA" | sudo debconf-set-selections
 echo "tzdata tzdata/Zones/$TIME_ZONE_AREA select $TIME_ZONE_CITY" | sudo debconf-set-selections
 
-DEBIAN_FRONTEND=noninteractive apt install -y --allow-unauthenticated -o Dpkg::Options::="--force-confold" -f language-pack-en-base network-manager isc-dhcp-client openssh-server bash-completion
+DEBIAN_FRONTEND=noninteractive apt install -y --allow-unauthenticated -o Dpkg::Options::="--force-confold" -f language-pack-en-base isc-dhcp-client openssh-server bash-completion
 
 # # Basic packages
 apt install -y dialog
@@ -44,15 +44,13 @@ apt install -y htop
 apt install -y tree
 apt install -y lrzsz
 apt install -y gpiod
-apt install -y wpasupplicant
 apt install -y kmod
-apt install -y iw
 apt install -y usbutils
 apt install -y memtester
 apt install -y alsa-utils
 apt install -y ufw
+apt install -y gdbserver
+apt install -y gdb 
 
 # Install virtual keyboard
 apt install -y onboard
-
-DEBIAN_FRONTEND=noninteractive apt install -y --allow-unauthenticated -o Dpkg::Options::="--force-confold" -f xinit lxde lightdm xserver-xorg lightdm-gtk-greeter

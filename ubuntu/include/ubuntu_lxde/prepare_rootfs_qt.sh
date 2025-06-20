@@ -243,22 +243,22 @@ rootfs_qt() {
 	echo "copy_kernel_modules completed successfully."
 
 	# Copy Wi-Fi firmware from renesas-ubuntu (yocto output) to rootfs
-	echo "7. Starting copy_wifi_firmware..."
-	copy_wifi_firmware
-	if [ $? -eq 1 ]; then
-		echo "copy_wifi_firmware failed."
-		return 1
-	fi
-	echo "copy_wifi_firmware completed successfully."
+	# echo "7. Starting copy_wifi_firmware..."
+	# copy_wifi_firmware
+	# if [ $? -eq 1 ]; then
+	#	echo "copy_wifi_firmware failed."
+	#	return 1
+	#fi
+	#echo "copy_wifi_firmware completed successfully."
 
 	# Get Bluetooth firmware from Realtek-OpenSource to rootfs
-	echo "8. Starting get_bluetooth_firmware..."
-	get_bluetooth_firmware
-	if [ $? -eq 1 ]; then
-		echo "get_bluetooth_firmware failed."
-		return 1
-	fi
-	echo "get_bluetooth_firmware completed successfully."
+	#echo "8. Starting get_bluetooth_firmware..."
+	#get_bluetooth_firmware
+	#if [ $? -eq 1 ]; then
+	#	echo "get_bluetooth_firmware failed."
+	#	return 1
+	#fi
+	#echo "get_bluetooth_firmware completed successfully."
 
 	return 0
 }
