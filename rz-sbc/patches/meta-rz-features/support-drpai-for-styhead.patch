@@ -44,7 +44,7 @@ index ffea09d..807b82e 100644
  "
  
 -TOOLCHAIN_TARGET_TASK_append = " drpai "
-+TOOLCHAIN_TARGET_TASK:append = " drpai "
++IMAGE_INSTALL:append = " drpai "
 diff --git a/meta-rz-drpai/recipes-drpai/drpai/drpai_1.2.0.bb b/meta-rz-drpai/recipes-drpai/drpai/drpai_1.2.0.bb
 index 6ccc501..6f58be0 100644
 --- a/meta-rz-drpai/recipes-drpai/drpai/drpai_1.2.0.bb
