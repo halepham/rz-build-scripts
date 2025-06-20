@@ -42,11 +42,5 @@ apt update && apt install ros-dev-tools -y
 apt update && apt upgrade -y
 apt install ros-jazzy-ros-base -y
 
-# Install colcon and other dependencies
-apt install python3-colcon-common-extensions -y # colcon
-apt install python3-rosdep -y # rosdep
-rosdep init
-sudo -u rzpi rosdep update
-
 # Notify
 echo "ROS2 installation complete!"

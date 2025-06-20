@@ -125,59 +125,6 @@ function copy_kernel_modules() {
 	return 0
 }
 
-# 3. Copy QT folder
-function copy_qt() {
-	echo "Copying qt files..."
-
-	# Change dir WORK_DIR
-	echo "Current working directory is: $WORK_DIR"
-	cd "$WORK_DIR" || { echo "Failed to change to WORK_DIR"; return 1; }
-
-	local src_qt="qt_rootfs_source/usr"
-	local target_dir="rootfs/usr"
-
-	if [ ! -e "$src_qt/lib/qml/qt*" ]; then
-		echo "[Warning] Don't find qt files. Skipping copy qt files."
-		return 0
-	fi
-
-	# Copy folder boot
-	# cp -rd "$src_qt/share/qt"* "$target_dir/share" || { echo "Failed to copy 'qt lib' directory"; return 1; }
-	cp -rd "$src_qt/lib/qml/qt"* "$target_dir/lib/aarch64-linux-gnu/" || { echo "Failed to copy 'aarch64-linux-gnu' directory"; return 1; }
-	cp -rd "$src_qt/lib/libQt"* "$target_dir/lib/aarch64-linux-gnu/" || { echo "Failed to copy 'aarch64-linux-gnu' directory"; return 1; }
-	mkdir -p "$target_dir/lib/aarch64-linux-gnu/pkgconfig/" || { echo "Failed to mkdir 'lib/aarch64-linux-gnu/pkgconfig' directory"; return 1; }
-	cp -rd "$src_qt/lib/pkgconfig/Qt"* "$target_dir/lib/aarch64-linux-gnu/pkgconfig/" || { echo "Failed to copy 'pkgconfig' directory"; return 1; }
-	echo "Copied contents."
-
-	echo "copy completed successfully."
-	return 0
-}
-
-# 4. Copy wifi firmware folder
-function copy_wifi_firmware() {
-	echo "Copying wifi_firmware files..."
-
-	# Change dir WORK_DIR
-	echo "Current working directory is: $WORK_DIR"
-	cd "$WORK_DIR" || { echo "Failed to change to WORK_DIR"; return 1; }
-
-	local src_qt="qt_rootfs_source/lib/firmware"
-	local target_dir="rootfs/lib"
-
-	if [ ! -e "${src_qt}" ]; then
-		echo "[Warning] Don't find wifi_firmware files. Skipping copy wifi_firmware files."
-		return 0
-	fi
-
-	# Copy folder
-	mkdir -p "$target_dir/firmware" || { echo "Failed to mkdir '/lib/firmware' directory"; return 1; }
-	cp -rd "$src_qt/"* "$target_dir/firmware/" || { echo "Failed to copy 'firmware' directory"; return 1; }
-	echo "Copied contents."
-
-	echo "copy completed successfully."
-	return 0
-}
-
 # --------------------------------------------------------------------------#
 # function rootfs_qt use to copy binaries of qt_rootfs_source to ubuntu os.
 # function rootfs_qt contain 2 steps:
@@ -196,28 +143,13 @@ function rootfs_qt() {
 	fi
 	echo "extract_renesas_ubuntu_input completed successfully."
 
-	echo "5. Starting copy_boot_folder and copy_qt, copy_wifi_firmware..."
+	echo "5. Starting copy_boot_folder..."
 	# Call copy_boot_folder to copy necessary boot files for the system
 	copy_boot_folder
 	if [[ $? -eq 1 ]]; then
 		echo "copy_boot_folder failed."
 		return 1
 	fi
-
-	# Call copy_qt to copy the QT binaries and libraries needed for the system
-	copy_qt
-	if [[ $? -eq 1 ]]; then
-		echo "copy_qt failed."
-		return 1
-	fi
-
-	# Call copy_wifi_firmware to copy the required WiFi firmware files to the system
-	copy_wifi_firmware
-	if [[ $? -eq 1 ]]; then
-		echo "copy_wifi_firmware failed."
-		return 1
-	fi
-	echo "copy_boot_folder and copy_qt, copy_wifi_firmware completed successfully."
 
 	echo "6. Starting copy_kernel_modules..."
 	# Call copy_kernel_modules to copy the kernel modules to the target system

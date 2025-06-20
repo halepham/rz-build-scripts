@@ -21,9 +21,6 @@ chown root:root /etc/sudoers.d/README
 chown root:root /usr/bin/sudo
 chmod 4755 /usr/bin/sudo
 
-# Add group to support wpa_supplicant.service
-groupadd netdev
-
 # Remove the password for the root user
 passwd -d root
 

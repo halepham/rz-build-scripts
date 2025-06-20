@@ -42,12 +42,12 @@ apt install -y dialog \
 	tree \
 	lrzsz \
 	gpiod \
-	wpasupplicant \
 	kmod \
-	iw \
 	usbutils \
 	memtester \
 	alsa-utils \
+	gdbserver \
+	gdb \
 	ufw
 
 apt install -y python3-pip \
@@ -56,10 +56,5 @@ apt install -y python3-pip \
 	can-utils \
 	i2c-tools \
 	spi-tools \
-	bluez \
-	connman \
-	network-manager \
-	rfkill \
-	obexftp bluez-obexd \
 	coreutils \
 	bsdmainutils

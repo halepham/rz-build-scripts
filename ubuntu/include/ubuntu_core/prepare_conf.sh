@@ -107,12 +107,12 @@ function set_network_config() {
 		return 1
 	fi
 
-	NETWORK_CONF="$ETC_PATH/network/interfaces"
+	NETWORK_CONF="$ETC_PATH/netplan"
 	# Check and create folder
 	mkdir -p "$(dirname "$NETWORK_CONF")" || { echo "Failed to create $(dirname "$NETWORK_CONF")"; return 1; }
 
 	# Check exist file network config
-	NETWORK_CONFIG_FILE="./config/ubuntu_core/network_interfaces.conf"
+	NETWORK_CONFIG_FILE="./config/ubuntu_core/01-netcfg.yaml"
 	if [[ ! -f "$NETWORK_CONFIG_FILE" ]]; then
 		echo "Configuration file $NETWORK_CONFIG_FILE not found"
 		return 1
@@ -122,26 +122,6 @@ function set_network_config() {
 	sudo cp "$NETWORK_CONFIG_FILE" "$NETWORK_CONF" || { echo "Failed to copy $NETWORK_CONFIG_FILE to $NETWORK_CONF"; return 1; }
 
 	echo "Network interfaces configured successfully."
-	return 0
-}
-
-# cp_ros2_ws is used to test the ROS2 installation, not used in the final image
-cp_ros2_ws() {
-	echo "Copying ROS2 workspace..."
-
-	# Change dir WORK_DIR
-	echo "Current working directory is: $WORK_DIR"
-	cd "$WORK_DIR" || { echo "Failed to change to WORK_DIR"; return 1; }
-
-	# Check if ROS2 workspace exists
-	if [[ ! -d "./include/ubuntu_core/ros2_ws" ]]; then
-		echo "ROS2 workspace not found."
-		return 1
-	fi
-
-	# Copy ROS2 workspace to rootfs
-	cp -r "./include/ubuntu_core/ros2_ws" "$ROOTFS/home" || { echo "Failed to copy ROS2 workspace"; return 1; }
-	echo "ROS2 workspace copied successfully."
 	return 0
 }
 
@@ -187,13 +167,6 @@ function set_config() {
 	set_network_config
 	if [[ $? -eq 1 ]]; then
 		echo "Failed to configure network interfaces. Exiting."
-		return 1
-	fi
-
-	# Call Function to set up ROS2 workspace
-	cp_ros2_ws
-	if [[ $? -eq 1 ]]; then
-		echo "Failed to copy ROS2 workspace. Exiting."
 		return 1
 	fi
 
