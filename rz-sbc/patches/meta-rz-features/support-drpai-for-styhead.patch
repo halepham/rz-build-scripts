@@ -31,7 +31,7 @@ index 2e06e6e..071fe8c 100644
  	file://0001-add-ether-setting.patch \
  "
 diff --git a/meta-rz-drpai/recipes-core/images/core-image-%.bbappend b/meta-rz-drpai/recipes-core/images/core-image-%.bbappend
-index ffea09d..807b82e 100644
+index ffea09d..001c1b8 100644
 --- a/meta-rz-drpai/recipes-core/images/core-image-%.bbappend
 +++ b/meta-rz-drpai/recipes-core/images/core-image-%.bbappend
 @@ -1,8 +1,8 @@
@@ -45,6 +45,7 @@ index ffea09d..807b82e 100644
  
 -TOOLCHAIN_TARGET_TASK_append = " drpai "
 +IMAGE_INSTALL:append = " drpai "
+\ No newline at end of file
 diff --git a/meta-rz-drpai/recipes-drpai/drpai/drpai_1.2.0.bb b/meta-rz-drpai/recipes-drpai/drpai/drpai_1.2.0.bb
 index 6ccc501..6f58be0 100644
 --- a/meta-rz-drpai/recipes-drpai/drpai/drpai_1.2.0.bb
@@ -442,18 +443,97 @@ index b9282ab..0000000
 -	file://0002-add-drpai-prop-to-devicetree.patch \
 -	file://0003-add-drpai-drv.patch \
 -"
-diff --git a/meta-rz-drpai/recipes-kernel/linux/linux-renesas/0003-add-drpai-drv.patch b/meta-rz-drpai/recipes-kernel/linux/linux-yocto/0018-Add-support-for-DRP-AI-driver.patch
+diff --git a/meta-rz-drpai/recipes-kernel/linux/linux-yocto/0003-Add-drpai-node-and-udmabuf-to-device-tree.patch b/meta-rz-drpai/recipes-kernel/linux/linux-yocto/0003-Add-drpai-node-and-udmabuf-to-device-tree.patch
+new file mode 100644
+index 0000000..85ac7ae
+--- /dev/null
++++ b/meta-rz-drpai/recipes-kernel/linux/linux-yocto/0003-Add-drpai-node-and-udmabuf-to-device-tree.patch
+@@ -0,0 +1,73 @@
++From a0da22b5d8486b45f7dcd02e510228c259a3de4d Mon Sep 17 00:00:00 2001
++From: Cong Nguyen <cong.nguyen.zn@renesas.com>
++Date: Sat, 21 Jun 2025 13:41:12 +0000
++Subject: [PATCH 3/4] Add drpai node and udmabuf to device tree
++
++Upstream-Status: Pending
++
++Signed-off-by: Cong Nguyen <cong.nguyen.zn@renesas.com>
++---
++ arch/arm64/boot/dts/renesas/r9a09g057.dtsi        | 13 +++++++++++++
++ .../boot/dts/renesas/r9a09g057h4-evk-ver1.dts     | 15 +++++++++++++++
++ 2 files changed, 28 insertions(+)
++
++diff --git a/arch/arm64/boot/dts/renesas/r9a09g057.dtsi b/arch/arm64/boot/dts/renesas/r9a09g057.dtsi
++index 9a3db8891..164fc48fb 100644
++--- a/arch/arm64/boot/dts/renesas/r9a09g057.dtsi
+++++ b/arch/arm64/boot/dts/renesas/r9a09g057.dtsi
++@@ -2408,6 +2408,19 @@ xhci1: usb@15860000 {
++  			phy-names = "usb1";
++  			status = "disabled";
++  		};
+++
+++		drpai0: drpai@16800000 {
+++			compatible = "renesas,rzv2h-drpai";
+++			reg = <0 0x17000000 0 0x1000000>,
+++				<0 0x16800000 0 0x400000>;
+++			interrupts = <GIC_SPI 914 IRQ_TYPE_LEVEL_HIGH>,
+++				<GIC_SPI 915 IRQ_TYPE_LEVEL_HIGH>,
+++				<GIC_SPI 916 IRQ_TYPE_LEVEL_HIGH>,
+++				<GIC_SPI 917 IRQ_TYPE_LEVEL_HIGH>;
+++			resets = <&cpg 253>;
+++			status = "disabled";
+++		};
+++
++ 		rcar_sound: sound@13c00000 {
++ 			/*
++ 			 * #sound-dai-cells is required
++diff --git a/arch/arm64/boot/dts/renesas/r9a09g057h4-evk-ver1.dts b/arch/arm64/boot/dts/renesas/r9a09g057h4-evk-ver1.dts
++index 3412e2a93..5b464d5d6 100644
++--- a/arch/arm64/boot/dts/renesas/r9a09g057h4-evk-ver1.dts
+++++ b/arch/arm64/boot/dts/renesas/r9a09g057h4-evk-ver1.dts
++@@ -237,6 +237,15 @@ osc1: cec-clock {
++ 		clock-frequency = <12000000>;
++ 	};
++ 
+++	udmabuf@0 {
+++		compatible = "ikwzm,u-dma-buf";
+++		device-name = "udmabuf0";
+++		minor-number = <0>;
+++		size = <0x4000000>; // 64MiB
+++		dma-coherent;
+++		memory-region = <&image_buf0>;
+++	};
+++
++ 	ov5645_fixed_clk: osc25250-clk {
++ 		compatible = "fixed-clock";
++ 		#clock-cells = <0>;
++@@ -1117,6 +1126,12 @@ &usb2_phy1 {
++ 	status = "okay";
++ };
++ 
+++&drpai0 {
+++	memory-region = <&drp_reserved>;
+++	image-memory-region = <&image_buf0>;
+++	status = "okay";
+++};
+++
++ &i3c {
++ 	pinctrl-0 = <&i3c_pins>;
++ 	pinctrl-names = "default";
++-- 
++2.43.0
++
+diff --git a/meta-rz-drpai/recipes-kernel/linux/linux-renesas/0003-add-drpai-drv.patch b/meta-rz-drpai/recipes-kernel/linux/linux-yocto/0004-Add-support-for-DRP-AI-driver.patch
 similarity index 98%
 rename from meta-rz-drpai/recipes-kernel/linux/linux-renesas/0003-add-drpai-drv.patch
-rename to meta-rz-drpai/recipes-kernel/linux/linux-yocto/0018-Add-support-for-DRP-AI-driver.patch
-index 4d0d632..d9ba7b9 100644
+rename to meta-rz-drpai/recipes-kernel/linux/linux-yocto/0004-Add-support-for-DRP-AI-driver.patch
+index 4d0d632..50bc2fe 100644
 --- a/meta-rz-drpai/recipes-kernel/linux/linux-renesas/0003-add-drpai-drv.patch
-+++ b/meta-rz-drpai/recipes-kernel/linux/linux-yocto/0018-Add-support-for-DRP-AI-driver.patch
++++ b/meta-rz-drpai/recipes-kernel/linux/linux-yocto/0004-Add-support-for-DRP-AI-driver.patch
 @@ -1,26 +1,88 @@
-+From 6032959414709bebc6483e841e81fbc7ce747cc3 Mon Sep 17 00:00:00 2001
++From c438276c32abad9488070ae21a551f68d43dcc86 Mon Sep 17 00:00:00 2001
 +From: Cong Nguyen <cong.nguyen.zn@renesas.com>
-+Date: Thu, 17 Apr 2025 10:21:48 +0000
-+Subject: [PATCH 18/19] Add support for DRP-AI driver
++Date: Sat, 21 Jun 2025 13:41:48 +0000
++Subject: [PATCH 4/4] Add support for DRP AI driver
 +
 +Upstream-Status: Pending
 +
@@ -518,7 +598,7 @@ index 4d0d632..d9ba7b9 100644
 + obj-$(CONFIG_HTE)		+= hte/
 + obj-$(CONFIG_DRM_ACCEL)		+= accel/
 +diff --git a/drivers/clk/renesas/r9a09g057-cpg.c b/drivers/clk/renesas/r9a09g057-cpg.c
-+index eee5d5e41..e9c9a930c 100644
++index 3fc4c9cd2..0468eb173 100644
 +--- a/drivers/clk/renesas/r9a09g057-cpg.c
 ++++ b/drivers/clk/renesas/r9a09g057-cpg.c
 +@@ -483,6 +483,10 @@ static const struct rzv2h_mod_clk r9a09g057_mod_clks[] __initconst = {
@@ -529,14 +609,14 @@ index 4d0d632..d9ba7b9 100644
 ++    DEF_MOD("drpai_aclk",		CLK_PLLDTY_DRP_DIV2, 17, 4, 8, 20),
 ++    DEF_MOD("drpai_initclk",	CLK_PLLDRP, 17, 5, 8, 21),
 ++    DEF_MOD("drpai_mclk",		CLK_PLLETH, 17, 6, 8, 22),
-+     DEF_MOD("ssi9_clk",			CLK_PLLCLN_DIV8, 24, 10, -1, -1),
-+     DEF_MOD("ssi8_clk",			CLK_PLLCLN_DIV8, 24,  9, -1, -1),
-+     DEF_MOD("ssi7_clk",			CLK_PLLCLN_DIV8, 24,  8, -1, -1),
++ 	DEF_MOD("ssi9_clk",			CLK_PLLCLN_DIV8, 24, 10, -1, -1),
++ 	DEF_MOD("ssi8_clk",			CLK_PLLCLN_DIV8, 24,  9, -1, -1),
++ 	DEF_MOD("ssi7_clk",			CLK_PLLCLN_DIV8, 24,  8, -1, -1),
 +@@ -655,6 +659,7 @@ static const struct rzv2h_reset r9a09g057_resets[] __initconst = {
-+     DEF_RST(15, 7, 7, 8),		/* TSU0_PRESETN */
-+     DEF_RST(15, 8, 7, 9),		/* TSU1_PRESETN */
-+     DEF_RST(15, 12, 7, 13),     /* DRP0_ARESETN */
-++    DEF_RST(15, 13,	7, 14),     /* DRPAI_0_ARESETN */
++ 	DEF_RST(15, 7, 7, 8),		/* TSU0_PRESETN */
++ 	DEF_RST(15, 8, 7, 9),		/* TSU1_PRESETN */
++ 	DEF_RST(15, 12, 7, 13),     /* DRP0_ARESETN */
+++	DEF_RST(15, 13,	7, 14),     /* DRPAI_0_ARESETN */
 + };
 + 
 + const struct rzv2h_cpg_info r9a09g057_cpg_info __initconst = {
@@ -739,10 +819,19 @@ index 4d0d632..d9ba7b9 100644
 +diff --git a/drivers/drpai/drpai-reg.h b/drivers/drpai/drpai-reg.h
  new file mode 100644
 -index 0000000..fc7fd57
-+index 000000000..fc7fd57c0
++index 000000000..1c3a40355
  --- /dev/null
  +++ b/drivers/drpai/drpai-reg.h
  @@ -0,0 +1,1053 @@
+@@ -7617,7 +7681,7 @@ index 0000000..fc7fd57
+ +#define CPG_PLLETH_MON_REG          (0x0B0uLL)
+ +
+ +// MSTOP
+-+#define CPG_BUS_8_MSTOP_REG         (0xD1CuLL)     // 0=module operating(initial),1=stop�F[8]=AIMAC, [9]=STP, [10]=DRP
+++#define CPG_BUS_8_MSTOP_REG         (0xD1CuLL)
+ +#define CPG_BUS_9_MSTOP_REG         (0xD20uLL)
+ +
+ +// BUS
 @@ -7679,9 +7743,9 @@ index 0000000..fc7fd57
  +#define MACCTL_ERR_STS_ADDR         (0x001C0008uLL)
  +
@@ -816,89 +905,11 @@ index 4d0d632..d9ba7b9 100644
  +
  +#endif /* _UAPI__DRPAI_H */
 +-- 
-+2.25.1
-+
-diff --git a/meta-rz-drpai/recipes-kernel/linux/linux-yocto/0019-Add-drpai-node-and-udmabuf-to-device-tree.patch b/meta-rz-drpai/recipes-kernel/linux/linux-yocto/0019-Add-drpai-node-and-udmabuf-to-device-tree.patch
-new file mode 100644
-index 0000000..191bd7a
---- /dev/null
-+++ b/meta-rz-drpai/recipes-kernel/linux/linux-yocto/0019-Add-drpai-node-and-udmabuf-to-device-tree.patch
-@@ -0,0 +1,72 @@
-+From 332e61e5030ef6cb07832a7926a9c6dabcb5fba2 Mon Sep 17 00:00:00 2001
-+From: Cong Nguyen <cong.nguyen.zn@renesas.com>
-+Date: Tue, 22 Apr 2025 07:23:50 +0000
-+Subject: [PATCH 19/19] Add drpai node and udmabuf to device tree
-+
-+Upstream-Status: Pending
-+
-+Signed-off-by: Cong Nguyen <cong.nguyen.zn@renesas.com>
-+---
-+ arch/arm64/boot/dts/renesas/r9a09g057.dtsi        | 12 ++++++++++++
-+ .../boot/dts/renesas/r9a09g057h4-evk-ver1.dts     | 15 +++++++++++++++
-+ 2 files changed, 27 insertions(+)
-+
-+diff --git a/arch/arm64/boot/dts/renesas/r9a09g057.dtsi b/arch/arm64/boot/dts/renesas/r9a09g057.dtsi
-+index 9d26e9206..fcfc6e2c6 100644
-+--- a/arch/arm64/boot/dts/renesas/r9a09g057.dtsi
-++++ b/arch/arm64/boot/dts/renesas/r9a09g057.dtsi
-+@@ -1675,6 +1675,18 @@ xhci1: usb@15860000 {
-+  			phy-names = "usb1";
-+  			status = "disabled";
-+  		};
-++
-++		drpai0: drpai@16800000 {
-++			compatible = "renesas,rzv2h-drpai";
-++			reg = <0 0x17000000 0 0x1000000>,
-++				<0 0x16800000 0 0x400000>;
-++			interrupts = <GIC_SPI 914 IRQ_TYPE_LEVEL_HIGH>,
-++				<GIC_SPI 915 IRQ_TYPE_LEVEL_HIGH>,
-++				<GIC_SPI 916 IRQ_TYPE_LEVEL_HIGH>,
-++				<GIC_SPI 917 IRQ_TYPE_LEVEL_HIGH>;
-++			resets = <&cpg 253>;
-++			status = "disabled";
-++		};
-+ 	};
-+ 
-+ 	thermal-zones {
-+diff --git a/arch/arm64/boot/dts/renesas/r9a09g057h4-evk-ver1.dts b/arch/arm64/boot/dts/renesas/r9a09g057h4-evk-ver1.dts
-+index 4e32a9fef..b7cf2ddee 100644
-+--- a/arch/arm64/boot/dts/renesas/r9a09g057h4-evk-ver1.dts
-++++ b/arch/arm64/boot/dts/renesas/r9a09g057h4-evk-ver1.dts
-+@@ -236,6 +236,15 @@ osc1: cec-clock {
-+ 		#clock-cells = <0>;
-+ 		clock-frequency = <12000000>;
-+ 	};
-++
-++	udmabuf@0 {
-++		compatible = "ikwzm,u-dma-buf";
-++		device-name = "udmabuf0";
-++		minor-number = <0>;
-++		size = <0x4000000>; // 64MiB
-++		dma-coherent;
-++		memory-region = <&image_buf0>;
-++	};
-+ };
-+ 
-+ &pinctrl {
-+@@ -753,6 +762,12 @@ &cmtw0 {
-+ 	status = "okay";
-+ };
-+ 
-++&drpai0 {
-++	memory-region = <&drp_reserved>;
-++	image-memory-region = <&image_buf0>;
-++	status = "okay";
-++};
-++
-+ &cmtw1 {
-+ 	status = "okay";
-+ };
-+-- 
-+2.25.1
++2.43.0
 +
 diff --git a/meta-rz-drpai/recipes-kernel/linux/linux-yocto_6.10.bbappend b/meta-rz-drpai/recipes-kernel/linux/linux-yocto_6.10.bbappend
 new file mode 100644
-index 0000000..e0224f9
+index 0000000..25b359a
 --- /dev/null
 +++ b/meta-rz-drpai/recipes-kernel/linux/linux-yocto_6.10.bbappend
 @@ -0,0 +1,11 @@
@@ -910,8 +921,8 @@ index 0000000..e0224f9
 +FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}/:"
 +
 +SRC_URI:append = "\
-+	file://0018-Add-support-for-DRP-AI-driver.patch \
-+	file://0019-Add-drpai-node-and-udmabuf-to-device-tree.patch \
++	file://0003-Add-drpai-node-and-udmabuf-to-device-tree.patch \
++	file://0004-Add-support-for-DRP-AI-driver.patch \
 +"
 diff --git a/meta-rz-drpai/recipes-support/opencv/opencv_%.bbappend b/meta-rz-drpai/recipes-support/opencv/opencv_%.bbappend
 index f66d972..b9494e7 100644
