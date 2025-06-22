@@ -2,6 +2,7 @@ rz-sbc/*/build/
 ubuntu/rootfs/
 ubuntu/qt_rootfs_source/
 ubuntu/rootfs_qt/
+rz-sbc/yocto_rzsbc_board/
 
 *.zip
 *.tar.gz
