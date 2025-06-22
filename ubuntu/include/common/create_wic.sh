@@ -5,100 +5,99 @@
 #   Includes rootfs and bootloader flashing (BL2, FIP) into raw sectors.
 # --------------------------------------------------------------------------#
 
-set -e
+create_wic() {
+    # ---------------------- Configurable Parameters ----------------------------
+    if [[ $# -ne 1 ]]; then
+        ROOTFS_DIR="./rootfs" # Default root filesystem directory
+    else
+        ROOTFS_DIR=$1 # Extracted root filesystem directory
+    fi
+    MACHINE="rzv2h-evk-ver1"
+    OUTPUT_IMG="ubuntu-image-${MACHINE}.img"
+    OUTPUT_IMG_ZIP="ubuntu-image-${MACHINE}.zip"
+    BOOT_SIZE_MB=200
+    ROOTFS_SPACE_MB=1024 # Extra space to avoid full disk
+    BL2_BIN="bl2_bp_esd-${MACHINE}.bin"
+    FIP_BIN="fip-${MACHINE}.bin"
 
-# ---------------------- Configurable Parameters ----------------------------
+    # ---------------------- Calculate Image Size ------------------------------
 
-if [[ $# -ne 1 ]]; then
-    ROOTFS_DIR="./rootfs"  # Default root filesystem directory
-else
-    ROOTFS_DIR=$1  # Extracted root filesystem directory
-fi
-MACHINE="rzv2h-evk-ver1"
-OUTPUT_IMG="ubuntu-image-${MACHINE}.img"
-OUTPUT_IMG_ZIP="ubuntu-image-${MACHINE}.zip"
-BOOT_SIZE_MB=200
-ROOTFS_SPACE_MB=1024  # Extra space to avoid full disk
-BL2_BIN="bl2_bp_esd-${MACHINE}.bin"
-FIP_BIN="fip-${MACHINE}.bin"
+    ROOTFS_SIZE_MB=$(du -s -B 1M "$ROOTFS_DIR" | awk '{print $1}')
+    TOTAL_SIZE_MB=$((4 + BOOT_SIZE_MB + ROOTFS_SIZE_MB + ROOTFS_SPACE_MB + 10)) # 4MB offset + buffer
 
-# ---------------------- Calculate Image Size ------------------------------
+    echo "[INFO] Creating blank image: ${OUTPUT_IMG} (${TOTAL_SIZE_MB}MB)..."
+    dd if=/dev/zero of="$OUTPUT_IMG" bs=1M count="$TOTAL_SIZE_MB" status=progress
+    sync
 
-ROOTFS_SIZE_MB=$(du -s -B 1M "$ROOTFS_DIR" | awk '{print $1}')
-TOTAL_SIZE_MB=$((4 + BOOT_SIZE_MB + ROOTFS_SIZE_MB + ROOTFS_SPACE_MB + 10))  # 4MB offset + buffer
+    # ---------------------- Create Partition Table ----------------------------
 
-echo "[INFO] Creating blank image: ${OUTPUT_IMG} (${TOTAL_SIZE_MB}MB)..."
-dd if=/dev/zero of="$OUTPUT_IMG" bs=1M count="$TOTAL_SIZE_MB" status=progress
-sync
+    LOOP_DEV=$(sudo losetup -f --show "$OUTPUT_IMG")
+    echo "[INFO] Loop device: $LOOP_DEV"
 
-# ---------------------- Create Partition Table ----------------------------
+    # Use a 4MB offset for first partition (8192 sectors)
+    BOOT_START_MB=4
+    ROOTFS_START_MB=$((BOOT_START_MB + BOOT_SIZE_MB))
 
-LOOP_DEV=$(sudo losetup -f --show "$OUTPUT_IMG")
-echo "[INFO] Loop device: $LOOP_DEV"
+    echo "[INFO] Creating partitions..."
+    sudo parted "$LOOP_DEV" --script mklabel msdos
+    sudo parted "$LOOP_DEV" --script mkpart primary fat32 ${BOOT_START_MB}MiB $((ROOTFS_START_MB))MiB
+    sudo parted "$LOOP_DEV" --script mkpart primary ext4 ${ROOTFS_START_MB}MiB 100%
+    sync
+    sleep 1
+    sudo losetup -d "$LOOP_DEV"
 
-# Use a 4MB offset for first partition (8192 sectors)
-BOOT_START_MB=4
-ROOTFS_START_MB=$((BOOT_START_MB + BOOT_SIZE_MB))
+    # ---------------------- Map and Format Partitions -------------------------
 
-echo "[INFO] Creating partitions..."
-sudo parted "$LOOP_DEV" --script mklabel msdos
-sudo parted "$LOOP_DEV" --script mkpart primary fat32 ${BOOT_START_MB}MiB $((ROOTFS_START_MB))MiB
-sudo parted "$LOOP_DEV" --script mkpart primary ext4 ${ROOTFS_START_MB}MiB 100%
-sync
-sleep 1
-sudo losetup -d "$LOOP_DEV"
+    LOOP_DEV=$(sudo losetup -f --show -P "$OUTPUT_IMG")
+    LOOP_NAME=$(basename "$LOOP_DEV")
+    sudo kpartx -av "$LOOP_DEV"
 
-# ---------------------- Map and Format Partitions -------------------------
+    BOOT_PART="/dev/mapper/${LOOP_NAME}p1"
+    ROOTFS_PART="/dev/mapper/${LOOP_NAME}p2"
 
-LOOP_DEV=$(sudo losetup -f --show -P "$OUTPUT_IMG")
-LOOP_NAME=$(basename "$LOOP_DEV")
-sudo kpartx -av "$LOOP_DEV"
+    echo "[INFO] Formatting partitions..."
+    sudo mkfs.vfat "$BOOT_PART" -n boot
+    sudo mkfs.ext4 "$ROOTFS_PART" -L rootfs
 
-BOOT_PART="/dev/mapper/${LOOP_NAME}p1"
-ROOTFS_PART="/dev/mapper/${LOOP_NAME}p2"
+    # ---------------------- Mount & Populate File Systems ---------------------
 
-echo "[INFO] Formatting partitions..."
-sudo mkfs.vfat "$BOOT_PART" -n boot
-sudo mkfs.ext4 "$ROOTFS_PART" -L rootfs
+    MOUNT_BOOT=$(mktemp -d)
+    MOUNT_ROOT=$(mktemp -d)
 
-# ---------------------- Mount & Populate File Systems ---------------------
+    echo "[INFO] Copying boot files..."
+    sudo mount "$BOOT_PART" "$MOUNT_BOOT"
+    sudo cp "$ROOTFS_DIR/boot/bl2_bp_spi-${MACHINE}.bin" "$MOUNT_BOOT/"
+    sudo cp "$ROOTFS_DIR/boot/${FIP_BIN}" "$MOUNT_BOOT/"
+    sudo cp "$ROOTFS_DIR/boot/Image"* "$MOUNT_BOOT/"
+    sudo cp "$ROOTFS_DIR/boot/r9a09g057h4-evk-ver1"* "$MOUNT_BOOT/"
+    sync
+    sleep 1
+    sudo umount "$MOUNT_BOOT"
 
-MOUNT_BOOT=$(mktemp -d)
-MOUNT_ROOT=$(mktemp -d)
+    echo "[INFO] Copying root filesystem..."
+    sudo mount "$ROOTFS_PART" "$MOUNT_ROOT"
+    sudo cp -a "$ROOTFS_DIR/"* "$MOUNT_ROOT/"
+    sudo umount "$MOUNT_ROOT"
 
-echo "[INFO] Copying boot files..."
-sudo mount "$BOOT_PART" "$MOUNT_BOOT"
-sudo cp "$ROOTFS_DIR/boot/bl2_bp_spi-${MACHINE}.bin" "$MOUNT_BOOT/"
-sudo cp "$ROOTFS_DIR/boot/${FIP_BIN}" "$MOUNT_BOOT/"
-sudo cp "$ROOTFS_DIR/boot/Image"* "$MOUNT_BOOT/"
-sudo cp "$ROOTFS_DIR/boot/r9a09g057h4-evk-ver1"* "$MOUNT_BOOT/"
-sync
-sleep 1
-sudo umount "$MOUNT_BOOT"
+    # ---------------------- Write Bootloaders to Raw Image ---------------------
 
-echo "[INFO] Copying root filesystem..."
-sudo mount "$ROOTFS_PART" "$MOUNT_ROOT"
-sudo cp -a "$ROOTFS_DIR/"* "$MOUNT_ROOT/"
-sudo umount "$MOUNT_ROOT"
+    echo "[INFO] Writing bootloaders to image..."
+    dd if="$ROOTFS_DIR/boot/${BL2_BIN}" of="$OUTPUT_IMG" bs=512 seek=1 conv=notrunc status=progress
+    dd if="$ROOTFS_DIR/boot/${FIP_BIN}" of="$OUTPUT_IMG" bs=512 seek=768 conv=notrunc status=progress
 
-# ---------------------- Write Bootloaders to Raw Image ---------------------
+    # ---------------------- Cleanup --------------------------------------------
 
-echo "[INFO] Writing bootloaders to image..."
-dd if="$ROOTFS_DIR/boot/${BL2_BIN}" of="$OUTPUT_IMG" bs=512 seek=1 conv=notrunc status=progress
-dd if="$ROOTFS_DIR/boot/${FIP_BIN}" of="$OUTPUT_IMG" bs=512 seek=768 conv=notrunc status=progress
+    sync
+    sudo kpartx -d "$LOOP_DEV"
+    sudo losetup -d "$LOOP_DEV"
+    rm -rf "$MOUNT_BOOT" "$MOUNT_ROOT"
 
-# ---------------------- Cleanup --------------------------------------------
+    # Create zip file for the image
+    zip $OUTPUT_IMG_ZIP $OUTPUT_IMG
 
-sync
-sudo kpartx -d "$LOOP_DEV"
-sudo losetup -d "$LOOP_DEV"
-rm -rf "$MOUNT_BOOT" "$MOUNT_ROOT"
+    echo "[SUCCESS] Bootable .img file created: $OUTPUT_IMG"
+    echo "[SUCCESS] Bootable .zip file created: $OUTPUT_IMG_ZIP"
 
-# Create zip file for the image
-zip $OUTPUT_IMG_ZIP $OUTPUT_IMG
-
-echo "[SUCCESS] Bootable .img file created: $OUTPUT_IMG"
-echo "[SUCCESS] Bootable .zip file created: $OUTPUT_IMG_ZIP"
-
-# Clean up the image file
-rm -f "$OUTPUT_IMG"
+    # Clean up the image file
+    rm -f "$OUTPUT_IMG"
+}
