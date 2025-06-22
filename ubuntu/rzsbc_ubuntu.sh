@@ -192,13 +192,6 @@ main_ubuntu_core(){
 		echo "create_wic failed."
 		exit 1
 	fi
-
-	# Move WIC output to output yocto folder
-	move_ubuntu_to_yocto_output
-	if [ $? -eq 1 ]; then
-		echo "move_ubuntu_to_yocto_output failed."
-		exit 1
-	fi
 }
 
 #######################################
@@ -293,13 +286,6 @@ main_ubuntu_lxde(){
 	create_wic
 	if [ $? -eq 1 ]; then
 		echo "create_wic failed."
-		exit 1
-	fi
-
-	# Move WIC output to output yocto folder
-	move_ubuntu_to_yocto_output
-	if [ $? -eq 1 ]; then
-		echo "move_ubuntu_to_yocto_output failed."
 		exit 1
 	fi
 }

@@ -1,44 +1,48 @@
 #!/bin/bash
 # ------------------------------------------------------------------------------------------#
-# This script installs ROS 2 Jazzy inside a chroot/rootfs environment.
-# It ensures locale, ROS repository, GPG keyring setup, and ROS installation.
+# This script is intended to be run inside a chroot environment to install ROS2 packages as
+# well as dependency packages and perform system updates. It first checks if the script is 
+# executed as root, updates the package list, and installs various required utilities and packages.
 # ------------------------------------------------------------------------------------------#
 
 export LC_ALL=C
-export DEBIAN_FRONTEND=noninteractive
-
 chmod 777 /tmp
-
-# 1. Update system and clean old cache
 apt update
 apt clean
 apt autoclean
 apt upgrade -y
+apt update
 
-# 2. Setup locale
-apt install -y locales
+# Set DEBIAN_FRONTEND globally
+export DEBIAN_FRONTEND=noninteractive
+
+# 1. Setup locale
+apt update && apt install locales -y
 locale-gen en_US en_US.UTF-8
 update-locale LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8
 export LANG=en_US.UTF-8
 
-# 3. Enable universe repo (required for some ROS dependencies)
-apt install -y software-properties-common
+# 2. Enable required repositories
+# Ensure that the Ubuntu Universe repository is enabled properly.
+apt update && apt install software-properties-common -y
 add-apt-repository universe -y
 
-# 4. Add ROS 2 GPG key securely (avoid apt-key)
-ROS_KEYRING_PATH=/usr/share/keyrings/ros-archive-keyring.gpg
-curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o $ROS_KEYRING_PATH
-chmod 644 $ROS_KEYRING_PATH
+# Add the ROS 2 GPG key with apt
+apt update && apt install curl -y
+curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg
 
-# 5. Add ROS 2 APT source list with signed-by option
-UBUNTU_CODENAME="$(. /etc/os-release && echo $UBUNTU_CODENAME)"
-ROS_LIST_FILE=/etc/apt/sources.list.d/ros2.list
+# Add the repository to sources list
+export ROS_APT_SOURCE_VERSION=$(curl -s https://api.github.com/repos/ros-infrastructure/ros-apt-source/releases/latest | grep -F "tag_name" | awk -F\" '{print $4}')
+curl -L -o /tmp/ros2-apt-source.deb "https://github.com/ros-infrastructure/ros-apt-source/releases/download/${ROS_APT_SOURCE_VERSION}/ros2-apt-source_${ROS_APT_SOURCE_VERSION}.$(. /etc/os-release && echo $VERSION_CODENAME)_all.deb"
+apt install /tmp/ros2-apt-source.deb
 
-echo "deb [arch=$(dpkg --print-architecture) signed-by=$ROS_KEYRING_PATH] http://packages.ros.org/ros2/ubuntu $UBUNTU_CODENAME main" \
-    > $ROS_LIST_FILE
+# Install development tools
+apt update && apt install ros-dev-tools -y
 
-# 6. Final update and install ROS 2 base packages
-apt update
-apt install -y ros-dev-tools ros-jazzy-ros-base
+# 3. Install ROS2
+# INSTALL ROS2 JAZZY
+apt update && apt upgrade -y
+apt install ros-jazzy-ros-base -y
 
-echo "ROS 2 Jazzy installation complete!"
+# Notify
+echo "ROS2 installation complete!"
