@@ -102,25 +102,28 @@ index 2d879d2..c4c12ad 100644
 +TOOLCHAIN_TARGET_TASK:append = " drp "
 \ No newline at end of file
 diff --git a/meta-rz-opencva/recipes-drp/drp/drp_1.0.0.bb b/meta-rz-opencva/recipes-drp/drp/drp_1.0.0.bb
-index 8e55db8..16f6224 100644
+index 8e55db8..fcd6140 100644
 --- a/meta-rz-opencva/recipes-drp/drp/drp_1.0.0.bb
 +++ b/meta-rz-opencva/recipes-drp/drp/drp_1.0.0.bb
-@@ -5,7 +5,7 @@
- DESCRIPTION = "Recipe for header file of DRP driver"
- SECTION = "libs"
+@@ -7,6 +7,10 @@ SECTION = "libs"
  DEPENDS = ""
--LICENSE = "GPL-2.0-WITH-Linux-syscall-note"
-+LICENSE = "CLOSED"
+ LICENSE = "GPL-2.0-WITH-Linux-syscall-note"
  LIC_FILES_CHKSUM = "file://COPYING;md5=6bc538ed5bd9a7fc9398086aedcd7e46"
++NO_GENERIC_LICENSE[GPL-2.0-WITH-Linux-syscall-note] = "COPYING"
++COPY_LIC_MANIFEST = "1"
++COPY_LIC_DIRS = "1"
++LICENSE_CREATE_PACKAGE = "1"
  
  PACKAGE_ARCH = "${MACHINE_ARCH}"
-@@ -14,17 +14,17 @@ PROVIDES = "${PN}"
+ PACKAGES = "${PN}"
+@@ -14,17 +18,17 @@ PROVIDES = "${PN}"
  
  PR = "r1"
  
 -SRC_URI = "\ 
+-    file://COPYING \
 +SRC_URI = "\
-     file://COPYING \
++    file://COPYING;md5sum=6bc538ed5bd9a7fc9398086aedcd7e46 \
      file://drp.h \
      "
  

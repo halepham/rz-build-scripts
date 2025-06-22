@@ -109,9 +109,9 @@
 		"enable": "false"
 	},
 	"meta-rz-features": {
-		"patches": ["patches/meta-rz-features/support-video-codec-for-styhead.patch",
-					"patches/meta-rz-features/support-opencva-for-styhead.patch",
-					"patches/meta-rz-features/support-drpai-for-styhead.patch"],
+		"patches": ["patches/meta-rz-features/meta-rz-codecs.patch",
+					"patches/meta-rz-features/meta-rz-drpai.patch",
+					"patches/meta-rz-features/meta-rz-opencva.patch"],
 		"type": "local",
 		"enable": "true"
 	}

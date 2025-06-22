@@ -269,25 +269,26 @@ index 90a18c7..72bf47d
 diff --git a/meta-rz-codecs/recipes-drp/drp/drp_1.0.0.bb b/meta-rz-codecs/recipes-drp/drp/drp_1.0.0.bb
 old mode 100755
 new mode 100644
-index 8e55db8..45c0a4c
+index 8e55db8..af741c9
 --- a/meta-rz-codecs/recipes-drp/drp/drp_1.0.0.bb
 +++ b/meta-rz-codecs/recipes-drp/drp/drp_1.0.0.bb
-@@ -5,7 +5,7 @@
- DESCRIPTION = "Recipe for header file of DRP driver"
- SECTION = "libs"
+@@ -7,6 +7,10 @@ SECTION = "libs"
  DEPENDS = ""
--LICENSE = "GPL-2.0-WITH-Linux-syscall-note"
-+LICENSE = "GPL-2.0-only"
+ LICENSE = "GPL-2.0-WITH-Linux-syscall-note"
  LIC_FILES_CHKSUM = "file://COPYING;md5=6bc538ed5bd9a7fc9398086aedcd7e46"
++NO_GENERIC_LICENSE[GPL-2.0-WITH-Linux-syscall-note] = "COPYING"
++COPY_LIC_MANIFEST = "1"
++COPY_LIC_DIRS = "1"
++LICENSE_CREATE_PACKAGE = "1"
  
  PACKAGE_ARCH = "${MACHINE_ARCH}"
-@@ -14,17 +14,17 @@ PROVIDES = "${PN}"
- 
+ PACKAGES = "${PN}"
+@@ -15,16 +19,16 @@ PROVIDES = "${PN}"
  PR = "r1"
  
--SRC_URI = "\ 
-+SRC_URI = "\
-     file://COPYING \
+ SRC_URI = "\ 
+-    file://COPYING \
++    file://COPYING;md5sum=6bc538ed5bd9a7fc9398086aedcd7e46 \
      file://drp.h \
      "
  
