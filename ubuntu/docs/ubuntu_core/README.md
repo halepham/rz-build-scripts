@@ -38,7 +38,7 @@ The `config.ini` file is used for configuring the script that builds an Ubuntu i
 - **UBUNTU_BASE_FILE_NAME**: The file name of the Ubuntu base that will be downloaded.
 - **UBUNTU_BASE_LINK**: The link to download the Ubuntu base file.
 - **OUTPUT_ROOTFS**: The output file name for the rootfs.
-- **OUTPUT_WIC**: The output file name for the wic image.
+- **OUTPUT_ZIP**: The output zip file name for the image.
 - **TIME_ZONE_AREA**: The time zone area (e.g., "Asia").
 - **TIME_ZONE_CITY**: The time zone city (e.g., "Ho_Chi_Minh").
 - **SSH_NO_PASS_LOGIN**: Set to 1 to enable users to log in without a password.

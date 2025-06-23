@@ -329,14 +329,14 @@ case "$UBUNTU_TYPE" in
 	ALL)
 		UBUNTU_TYPE="CORE"
 		OUTPUT_ROOTFS="ubuntu-core-image"
-		OUTPUT_WIC="ubuntu-core-image.wic"
+		OUTPUT_ZIP="ubuntu-image-rzv2h-evk-ver1.zip"
 		source_env
 		do_build_yocto
 		main_ubuntu_core
 
 		UBUNTU_TYPE="LXDE"
 		OUTPUT_ROOTFS="ubuntu-lxde-image"
-		OUTPUT_WIC="ubuntu-lxde-image.wic"
+		OUTPUT_ZIP="ubuntu-image-rzv2h-evk-ver1.zip"
 		source_env
 		main_ubuntu_lxde
 		;;

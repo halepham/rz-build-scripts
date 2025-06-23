@@ -11,7 +11,7 @@ build_yocto() {
 	# Loop until we find the output file
 	while [ -z "$result" ]; do
 		# Run bitbake
-		su -c "(cd ../rz-sbc/ && IMAGE=renesas-ubuntu DISTRO=ubuntu-tiny ./rzsbc_yocto.sh build)" "$MAIN_USER"
+		su -c "(cd ../rz-sbc/ && IMAGE=core-image-weston ./rzsbc_yocto.sh build)" "$MAIN_USER"
 
 		# Check the output
 		result=$(find ../rz-sbc/yocto_rzsbc_board/build/tmp/deploy/ -name '*.tar.bz2' -exec cp {} ./${renesas_ubuntu_input_name} \; && echo "File copied successfully.")
@@ -28,16 +28,17 @@ build_yocto() {
 # This function help main script bring wic file to yocto output's directory
 move_ubuntu_to_yocto_output(){
 	# Check output folder availability
-	DIR="../rz-sbc/yocto_rzsbc_board/build/tmp/deploy/images/rzg2l-sbc/target/images"
+	MACHINE="rzv2h-evk-ver1"
+	DIR="../rz-sbc/yocto_rzsbc_board/build/tmp/deploy/images/${MACHINE}/target/images"
 	if [ -d "$DIR" ]; then
 		echo "Found output yocto folder"
-		mv "$OUTPUT_WIC"* $DIR
+		mv "$OUTPUT_ZIP"* $DIR
 	else
 		echo "Output yocto folder not found. Please check the directory path."
 		return 1
 	fi
 
-	DIR_ROOTFS="../rz-sbc/yocto_rzsbc_board/build/tmp/deploy/images/rzg2l-sbc/target/images/rootfs"
+	DIR_ROOTFS="../rz-sbc/yocto_rzsbc_board/build/tmp/deploy/images/${MACHINE}/target/images/rootfs"
 	if [ -d "$DIR_ROOTFS" ]; then
 		echo "Found output yocto rootfs folder"
 		mv "$OUTPUT_ROOTFS"* $DIR_ROOTFS
