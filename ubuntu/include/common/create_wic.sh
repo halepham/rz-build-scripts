@@ -6,15 +6,41 @@
 # --------------------------------------------------------------------------#
 
 create_wic() {
+    # ---------------------- Remove Existing Output Files -----------------------
+    MACHINE="rzv2h-evk-ver1"
+    OUTPUT_IMG="ubuntu-image-${MACHINE}.img"
+    OUTPUT_IMG_ZIP="ubuntu-image-${MACHINE}.zip"
+    if [ -f "$OUTPUT_IMG" ]; then
+        echo "[INFO] Removing existing image: $OUTPUT_IMG"
+        rm -f "$OUTPUT_IMG"
+    fi
+    if [ -f "$OUTPUT_IMG_ZIP" ]; then
+        echo "[INFO] Removing existing zip: $OUTPUT_IMG_ZIP"
+        rm -f "$OUTPUT_IMG_ZIP"
+    fi
+
+    # ---------------------- Check Dependencies --------------------------------
+    REQUIRED_CMDS=(dd parted dosfstools losetup kpartx zip)
+    MISSING_CMDS=()
+    for cmd in "${REQUIRED_CMDS[@]}"; do
+        if ! command -v "$cmd" &> /dev/null; then
+            MISSING_CMDS+=("$cmd")
+        fi
+    done
+    if [ ${#MISSING_CMDS[@]} -ne 0 ]; then
+        echo "[INFO] Installing missing tools: ${MISSING_CMDS[*]}"
+        apt-get update
+        apt-get install -y "${MISSING_CMDS[@]}"
+    fi
+
     # ---------------------- Configurable Parameters ----------------------------
     if [[ $# -ne 1 ]]; then
         ROOTFS_DIR="./rootfs" # Default root filesystem directory
     else
         ROOTFS_DIR=$1 # Extracted root filesystem directory
     fi
-    MACHINE="rzv2h-evk-ver1"
-    OUTPUT_IMG="ubuntu-image-${MACHINE}.img"
-    OUTPUT_IMG_ZIP="ubuntu-image-${MACHINE}.zip"
+
+    # MACHINE, OUTPUT_IMG, OUTPUT_IMG_ZIP already set above
     BOOT_SIZE_MB=200
     ROOTFS_SPACE_MB=1024 # Extra space to avoid full disk
     BL2_BIN="bl2_bp_esd-${MACHINE}.bin"
