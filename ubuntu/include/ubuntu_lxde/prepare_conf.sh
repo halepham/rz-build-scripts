@@ -160,7 +160,7 @@ set_config() {
 	fi
 
 	# Configure network interfaces
-	copy_file_conf "01-netcfg.yaml" "rootfs/etc/netplan" "644"
+	copy_file_conf "interfaces" "rootfs/etc/network" "644"
 	if [ $? -eq 1 ]; then
 		echo "Failed to configure network interfaces. Exiting."
 		return 1
