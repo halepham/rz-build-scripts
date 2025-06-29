@@ -51,6 +51,7 @@ apt install -y alsa-utils
 apt install -y ufw
 apt install -y gdbserver
 apt install -y gdb 
+apt install -y rsync
 
 # Install virtual keyboard
 apt install -y onboard

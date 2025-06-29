@@ -48,7 +48,8 @@ apt install -y dialog \
 	alsa-utils \
 	gdbserver \
 	gdb \
-	ufw
+	ufw \
+	rsync 
 
 apt install -y python3-pip \
 	dpkg \
