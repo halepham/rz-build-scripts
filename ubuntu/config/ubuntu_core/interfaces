@@ -11,9 +11,8 @@ allow-hotplug end0
 iface end0 inet dhcp
 
 # Ethernet interface end1 with static IP
-auto end1
+allow-hotplug end1
 iface end1 inet static
         address 192.168.1.10
         netmask 255.255.255.0
-        gateway 192.168.1.1
 
