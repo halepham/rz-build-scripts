@@ -1,5 +1,5 @@
 diff --git a/meta-ros-common/recipes-devtools/python/python3-flake8-builtins_2.2.0.bb b/meta-ros-common/recipes-devtools/python/python3-flake8-builtins_2.2.0.bb
-index 95e1fe77c..db4e40985 100644
+index 95e1fe7..db4e409 100644
 --- a/meta-ros-common/recipes-devtools/python/python3-flake8-builtins_2.2.0.bb
 +++ b/meta-ros-common/recipes-devtools/python/python3-flake8-builtins_2.2.0.bb
 @@ -3,10 +3,12 @@ HOMEPAGE = "https://github.com/gforcada/flake8-builtins"
@@ -17,7 +17,7 @@ index 95e1fe77c..db4e40985 100644
  
  BBCLASSEXTEND = "native"
 diff --git a/meta-ros-common/recipes-devtools/python/python3-flake8-comprehensions_3.14.0.bb b/meta-ros-common/recipes-devtools/python/python3-flake8-comprehensions_3.14.0.bb
-index cc9416bfc..669bfbc9a 100644
+index cc9416b..669bfbc 100644
 --- a/meta-ros-common/recipes-devtools/python/python3-flake8-comprehensions_3.14.0.bb
 +++ b/meta-ros-common/recipes-devtools/python/python3-flake8-comprehensions_3.14.0.bb
 @@ -7,6 +7,8 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=dd54c94e040946267bc2300dbc7d7e6d"
@@ -31,7 +31,7 @@ index cc9416bfc..669bfbc9a 100644
  
  BBCLASSEXTEND = "native"
 diff --git a/meta-ros-common/recipes-devtools/python/python3-flake8-docstrings_1.7.0.bb b/meta-ros-common/recipes-devtools/python/python3-flake8-docstrings_1.7.0.bb
-index 23dd9bd70..34048bd01 100644
+index 23dd9bd..34048bd 100644
 --- a/meta-ros-common/recipes-devtools/python/python3-flake8-docstrings_1.7.0.bb
 +++ b/meta-ros-common/recipes-devtools/python/python3-flake8-docstrings_1.7.0.bb
 @@ -7,6 +7,8 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=a34bc20b983e1104e2d50423b224b087"
@@ -45,7 +45,7 @@ index 23dd9bd70..34048bd01 100644
  
  BBCLASSEXTEND = "native"
 diff --git a/meta-ros-common/recipes-devtools/python/python3-flake8-quotes_3.3.2.bb b/meta-ros-common/recipes-devtools/python/python3-flake8-quotes_3.3.2.bb
-index 2e04c2c2b..fbbcfcea8 100644
+index 2e04c2c..fbbcfce 100644
 --- a/meta-ros-common/recipes-devtools/python/python3-flake8-quotes_3.3.2.bb
 +++ b/meta-ros-common/recipes-devtools/python/python3-flake8-quotes_3.3.2.bb
 @@ -7,6 +7,8 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=838c366f69b72c5df05c96dff79b35f2"
@@ -60,7 +60,7 @@ index 2e04c2c2b..fbbcfcea8 100644
  BBCLASSEXTEND = "native"
 diff --git a/meta-ros-common/recipes-devtools/python/python3-transforms3d/0001-fix-using-old-syntax.patch b/meta-ros-common/recipes-devtools/python/python3-transforms3d/0001-fix-using-old-syntax.patch
 new file mode 100644
-index 000000000..7c0cc5546
+index 0000000..1189475
 --- /dev/null
 +++ b/meta-ros-common/recipes-devtools/python/python3-transforms3d/0001-fix-using-old-syntax.patch
 @@ -0,0 +1,27 @@
@@ -93,7 +93,7 @@ index 000000000..7c0cc5546
 +2.43.0
 diff --git a/meta-ros-common/recipes-devtools/python/python3-transforms3d_0.3.1.bbappend b/meta-ros-common/recipes-devtools/python/python3-transforms3d_0.3.1.bbappend
 new file mode 100644
-index 000000000..7ed012270
+index 0000000..7ed0122
 --- /dev/null
 +++ b/meta-ros-common/recipes-devtools/python/python3-transforms3d_0.3.1.bbappend
 @@ -0,0 +1,2 @@
@@ -101,14 +101,11 @@ index 000000000..7ed012270
 +SRC_URI += "file://0001-fix-using-old-syntax.patch"
 \ No newline at end of file
 diff --git a/meta-ros-common/recipes-extended/suitesparse/suitesparse-cholmod_5.2.1.bb b/meta-ros-common/recipes-extended/suitesparse/suitesparse-cholmod_5.2.1.bb
-index 92e408ccb..7c3b7af04 100644
+index 92e408c..11cfa31 100644
 --- a/meta-ros-common/recipes-extended/suitesparse/suitesparse-cholmod_5.2.1.bb
 +++ b/meta-ros-common/recipes-extended/suitesparse/suitesparse-cholmod_5.2.1.bb
-@@ -25,6 +25,12 @@ EXTRA_OECMAKE = "-DSUITESPARSE_USE_64BIT_BLAS=ON -DBLA_PREFER_PKGCONFIG=ON"
- DEPENDS:append:class-target = " chrpath-replacement-native"
- # For some reason ends with bad RPATH
+@@ -27,4 +27,9 @@ DEPENDS:append:class-target = " chrpath-replacement-native"
  # WARNING: suitesparse-cholmod-5.4.0-r0 do_package_qa: QA Issue: package suitesparse-cholmod contains bad RPATH /jenkins/mjansa/build-ros/ros2-dashing-master/tmp-glibc/work/core2-32-oe-linux/suitesparse-cholmod/5.4.0-r0/image/usr/lib in file /jenkins/mjansa/build-ros/ros2-dashing-master/tmp-glibc/work/core2-32-oe-linux/suitesparse-cholmod/5.4.0-r0/packages-split/suitesparse-cholmod/usr/lib/libcholmod.so.3.0.13 [rpaths]
-+
  do_install:append() {
      chrpath --delete ${D}${libdir}/*${SOLIBS}
 +    # Fix hardcoded TMPDIR in .pc and .cmake files
@@ -118,7 +115,7 @@ index 92e408ccb..7c3b7af04 100644
 +           ${D}${libdir}/cmake/CHOLMOD/CHOLMODTargets.cmake
  }
 diff --git a/meta-ros2-jazzy/conf/ros-distro/include/jazzy/ros-distro.inc b/meta-ros2-jazzy/conf/ros-distro/include/jazzy/ros-distro.inc
-index 30eec58fe..cae4858f4 100644
+index 30eec58..cae4858 100644
 --- a/meta-ros2-jazzy/conf/ros-distro/include/jazzy/ros-distro.inc
 +++ b/meta-ros2-jazzy/conf/ros-distro/include/jazzy/ros-distro.inc
 @@ -234,6 +234,9 @@ ROS_UNRESOLVED_DEP-python3-flake8-docstrings = "python3-flake8-docstrings"
@@ -151,7 +148,7 @@ index 30eec58fe..cae4858f4 100644
  ROS_UNRESOLVED_DEP-clang-tidy = "clang"
  ROS_UNRESOLVED_DEP-clang-tidy-native = "clang-native"
 diff --git a/meta-ros2-jazzy/generated-recipes/control-toolbox/control-toolbox_4.2.0-1.bb b/meta-ros2-jazzy/generated-recipes/control-toolbox/control-toolbox_4.2.0-1.bb
-index a6ef4aa14..5707a6bd1 100644
+index a6ef4aa..5707a6b 100644
 --- a/meta-ros2-jazzy/generated-recipes/control-toolbox/control-toolbox_4.2.0-1.bb
 +++ b/meta-ros2-jazzy/generated-recipes/control-toolbox/control-toolbox_4.2.0-1.bb
 @@ -36,6 +36,7 @@ ROS_BUILD_DEPENDS = " \
@@ -162,8 +159,162 @@ index a6ef4aa14..5707a6bd1 100644
  "
  
  ROS_EXPORT_DEPENDS = " \
+diff --git a/meta-ros2-jazzy/generated-recipes/cpp-polyfills/files/COPYING b/meta-ros2-jazzy/generated-recipes/cpp-polyfills/files/COPYING
+new file mode 100644
+index 0000000..0e259d4
+--- /dev/null
++++ b/meta-ros2-jazzy/generated-recipes/cpp-polyfills/files/COPYING
+@@ -0,0 +1,121 @@
++Creative Commons Legal Code
++
++CC0 1.0 Universal
++
++    CREATIVE COMMONS CORPORATION IS NOT A LAW FIRM AND DOES NOT PROVIDE
++    LEGAL SERVICES. DISTRIBUTION OF THIS DOCUMENT DOES NOT CREATE AN
++    ATTORNEY-CLIENT RELATIONSHIP. CREATIVE COMMONS PROVIDES THIS
++    INFORMATION ON AN "AS-IS" BASIS. CREATIVE COMMONS MAKES NO WARRANTIES
++    REGARDING THE USE OF THIS DOCUMENT OR THE INFORMATION OR WORKS
++    PROVIDED HEREUNDER, AND DISCLAIMS LIABILITY FOR DAMAGES RESULTING FROM
++    THE USE OF THIS DOCUMENT OR THE INFORMATION OR WORKS PROVIDED
++    HEREUNDER.
++
++Statement of Purpose
++
++The laws of most jurisdictions throughout the world automatically confer
++exclusive Copyright and Related Rights (defined below) upon the creator
++and subsequent owner(s) (each and all, an "owner") of an original work of
++authorship and/or a database (each, a "Work").
++
++Certain owners wish to permanently relinquish those rights to a Work for
++the purpose of contributing to a commons of creative, cultural and
++scientific works ("Commons") that the public can reliably and without fear
++of later claims of infringement build upon, modify, incorporate in other
++works, reuse and redistribute as freely as possible in any form whatsoever
++and for any purposes, including without limitation commercial purposes.
++These owners may contribute to the Commons to promote the ideal of a free
++culture and the further production of creative, cultural and scientific
++works, or to gain reputation or greater distribution for their Work in
++part through the use and efforts of others.
++
++For these and/or other purposes and motivations, and without any
++expectation of additional consideration or compensation, the person
++associating CC0 with a Work (the "Affirmer"), to the extent that he or she
++is an owner of Copyright and Related Rights in the Work, voluntarily
++elects to apply CC0 to the Work and publicly distribute the Work under its
++terms, with knowledge of his or her Copyright and Related Rights in the
++Work and the meaning and intended legal effect of CC0 on those rights.
++
++1. Copyright and Related Rights. A Work made available under CC0 may be
++protected by copyright and related or neighboring rights ("Copyright and
++Related Rights"). Copyright and Related Rights include, but are not
++limited to, the following:
++
++  i. the right to reproduce, adapt, distribute, perform, display,
++     communicate, and translate a Work;
++ ii. moral rights retained by the original author(s) and/or performer(s);
++iii. publicity and privacy rights pertaining to a person's image or
++     likeness depicted in a Work;
++ iv. rights protecting against unfair competition in regards to a Work,
++     subject to the limitations in paragraph 4(a), below;
++  v. rights protecting the extraction, dissemination, use and reuse of data
++     in a Work;
++ vi. database rights (such as those arising under Directive 96/9/EC of the
++     European Parliament and of the Council of 11 March 1996 on the legal
++     protection of databases, and under any national implementation
++     thereof, including any amended or successor version of such
++     directive); and
++vii. other similar, equivalent or corresponding rights throughout the
++     world based on applicable law or treaty, and any national
++     implementations thereof.
++
++2. Waiver. To the greatest extent permitted by, but not in contravention
++of, applicable law, Affirmer hereby overtly, fully, permanently,
++irrevocably and unconditionally waives, abandons, and surrenders all of
++Affirmer's Copyright and Related Rights and associated claims and causes
++of action, whether now known or unknown (including existing as well as
++future claims and causes of action), in the Work (i) in all territories
++worldwide, (ii) for the maximum duration provided by applicable law or
++treaty (including future time extensions), (iii) in any current or future
++medium and for any number of copies, and (iv) for any purpose whatsoever,
++including without limitation commercial, advertising or promotional
++purposes (the "Waiver"). Affirmer makes the Waiver for the benefit of each
++member of the public at large and to the detriment of Affirmer's heirs and
++successors, fully intending that such Waiver shall not be subject to
++revocation, rescission, cancellation, termination, or any other legal or
++equitable action to disrupt the quiet enjoyment of the Work by the public
++as contemplated by Affirmer's express Statement of Purpose.
++
++3. Public License Fallback. Should any part of the Waiver for any reason
++be judged legally invalid or ineffective under applicable law, then the
++Waiver shall be preserved to the maximum extent permitted taking into
++account Affirmer's express Statement of Purpose. In addition, to the
++extent the Waiver is so judged Affirmer hereby grants to each affected
++person a royalty-free, non transferable, non sublicensable, non exclusive,
++irrevocable and unconditional license to exercise Affirmer's Copyright and
++Related Rights in the Work (i) in all territories worldwide, (ii) for the
++maximum duration provided by applicable law or treaty (including future
++time extensions), (iii) in any current or future medium and for any number
++of copies, and (iv) for any purpose whatsoever, including without
++limitation commercial, advertising or promotional purposes (the
++"License"). The License shall be deemed effective as of the date CC0 was
++applied by Affirmer to the Work. Should any part of the License for any
++reason be judged legally invalid or ineffective under applicable law, such
++partial invalidity or ineffectiveness shall not invalidate the remainder
++of the License, and in such case Affirmer hereby affirms that he or she
++will not (i) exercise any of his or her remaining Copyright and Related
++Rights in the Work or (ii) assert any associated claims and causes of
++action with respect to the Work, in either case contrary to Affirmer's
++express Statement of Purpose.
++
++4. Limitations and Disclaimers.
++
++ a. No trademark or patent rights held by Affirmer are waived, abandoned,
++    surrendered, licensed or otherwise affected by this document.
++ b. Affirmer offers the Work as-is and makes no representations or
++    warranties of any kind concerning the Work, express, implied,
++    statutory or otherwise, including without limitation warranties of
++    title, merchantability, fitness for a particular purpose, non
++    infringement, or the absence of latent or other defects, accuracy, or
++    the present or absence of errors, whether or not discoverable, all to
++    the greatest extent permissible under applicable law.
++ c. Affirmer disclaims responsibility for clearing rights of other persons
++    that may apply to the Work or any use thereof, including without
++    limitation any person's Copyright and Related Rights in the Work.
++    Further, Affirmer disclaims responsibility for obtaining any necessary
++    consents, permissions or other rights required for any use of the
++    Work.
++ d. Affirmer understands and acknowledges that Creative Commons is not a
++    party to this document and has no duty or obligation with respect to
++    this CC0 or use of the Work.
+diff --git a/meta-ros2-jazzy/generated-recipes/cpp-polyfills/tl-expected_1.0.2-5.bb b/meta-ros2-jazzy/generated-recipes/cpp-polyfills/tl-expected_1.0.2-5.bb
+index fb961da..533d431 100644
+--- a/meta-ros2-jazzy/generated-recipes/cpp-polyfills/tl-expected_1.0.2-5.bb
++++ b/meta-ros2-jazzy/generated-recipes/cpp-polyfills/tl-expected_1.0.2-5.bb
+@@ -13,7 +13,11 @@ SECTION = "devel"
+ # Original license in package.xml, joined with "&" when multiple license tags were used:
+ #         "Creative Commons Zero v1.0 Universal"
+ LICENSE = "Creative-Commons-Zero-v1.0-Universal"
+-LIC_FILES_CHKSUM = "file://package.xml;beginline=10;endline=10;md5=99bbbc21ede373b77d86a4695cf93337"
++LIC_FILES_CHKSUM = "file://COPYING;md5=65d3616852dbf7b1a6d4b53b00626032"
++NO_GENERIC_LICENSE[Creative-Commons-Zero-v1.0-Universal] = "COPYING"
++COPY_LIC_MANIFEST = "1"
++COPY_LIC_DIRS = "1"
++LICENSE_CREATE_PACKAGE = "1"
+ 
+ ROS_CN = "cpp_polyfills"
+ ROS_BPN = "tl_expected"
+@@ -42,7 +46,8 @@ RDEPENDS:${PN} += "${ROS_EXEC_DEPENDS}"
+ 
+ # matches with: https://github.com/ros2-gbp/cpp_polyfills-release/archive/release/jazzy/tl_expected/1.0.2-5.tar.gz
+ ROS_BRANCH ?= "branch=release/jazzy/tl_expected"
+-SRC_URI = "git://github.com/ros2-gbp/cpp_polyfills-release;${ROS_BRANCH};protocol=https"
++SRC_URI = "git://github.com/ros2-gbp/cpp_polyfills-release;${ROS_BRANCH};protocol=https \
++           file://COPYING"
+ SRCREV = "1b7fd0d9944225b12ed2d8e8840e5608a04d1997"
+ S = "${WORKDIR}/git"
+ 
 diff --git a/meta-ros2-jazzy/generated-recipes/eigen-stl-containers/eigen-stl-containers_1.1.0-1.bb b/meta-ros2-jazzy/generated-recipes/eigen-stl-containers/eigen-stl-containers_1.1.0-1.bb
-index 61a2ee920..c2825adb3 100644
+index 61a2ee9..c2825ad 100644
 --- a/meta-ros2-jazzy/generated-recipes/eigen-stl-containers/eigen-stl-containers_1.1.0-1.bb
 +++ b/meta-ros2-jazzy/generated-recipes/eigen-stl-containers/eigen-stl-containers_1.1.0-1.bb
 @@ -10,7 +10,7 @@ AUTHOR = "Chris Lalancette <clalancette@osrfoundation.org>"
@@ -176,7 +327,7 @@ index 61a2ee920..c2825adb3 100644
  
  ROS_CN = "eigen_stl_containers"
 diff --git a/meta-ros2-jazzy/generated-recipes/eigenpy/eigenpy_3.10.3-1.bb b/meta-ros2-jazzy/generated-recipes/eigenpy/eigenpy_3.10.3-1.bb
-index 50ff6d482..92d2da2b9 100644
+index 50ff6d4..92d2da2 100644
 --- a/meta-ros2-jazzy/generated-recipes/eigenpy/eigenpy_3.10.3-1.bb
 +++ b/meta-ros2-jazzy/generated-recipes/eigenpy/eigenpy_3.10.3-1.bb
 @@ -10,7 +10,7 @@ AUTHOR = "Justin Carpentier <justin.carpentier@inria.fr>"
@@ -212,8 +363,41 @@ index 50ff6d482..92d2da2b9 100644
  "
  
  # Currently informational only -- see http://www.ros.org/reps/rep-0149.html#dependency-tags.
+diff --git a/meta-ros2-jazzy/generated-recipes/foxglove-bridge/foxglove-bridge_0.8.3-1.bb b/meta-ros2-jazzy/generated-recipes/foxglove-bridge/foxglove-bridge_0.8.5-1.bb
+similarity index 95%
+rename from meta-ros2-jazzy/generated-recipes/foxglove-bridge/foxglove-bridge_0.8.3-1.bb
+rename to meta-ros2-jazzy/generated-recipes/foxglove-bridge/foxglove-bridge_0.8.5-1.bb
+index 384d8e7..687c311 100644
+--- a/meta-ros2-jazzy/generated-recipes/foxglove-bridge/foxglove-bridge_0.8.3-1.bb
++++ b/meta-ros2-jazzy/generated-recipes/foxglove-bridge/foxglove-bridge_0.8.5-1.bb
+@@ -72,10 +72,10 @@ DEPENDS += "${ROS_EXPORT_DEPENDS} ${ROS_BUILDTOOL_EXPORT_DEPENDS}"
+ 
+ RDEPENDS:${PN} += "${ROS_EXEC_DEPENDS}"
+ 
+-# matches with: https://github.com/ros2-gbp/foxglove_bridge-release/archive/release/jazzy/foxglove_bridge/0.8.3-1.tar.gz
++# matches with: https://github.com/ros2-gbp/foxglove_bridge-release/archive/release/jazzy/foxglove_bridge/0.8.5-1.tar.gz
+ ROS_BRANCH ?= "branch=release/jazzy/foxglove_bridge"
+ SRC_URI = "git://github.com/ros2-gbp/foxglove_bridge-release;${ROS_BRANCH};protocol=https"
+-SRCREV = "32c1633259e40895e4a10ff4445502b208799f02"
++SRCREV = "50371d4884daf4e73d27e00d991f2a6f3d7a956e"
+ S = "${WORKDIR}/git"
+ 
+ ROS_BUILD_TYPE = "ament_cmake"
+diff --git a/meta-ros2-jazzy/generated-recipes/geometric-shapes/geometric-shapes_2.3.2-1.bb b/meta-ros2-jazzy/generated-recipes/geometric-shapes/geometric-shapes_2.3.2-1.bb
+index fbee7ae..25551d0 100644
+--- a/meta-ros2-jazzy/generated-recipes/geometric-shapes/geometric-shapes_2.3.2-1.bb
++++ b/meta-ros2-jazzy/generated-recipes/geometric-shapes/geometric-shapes_2.3.2-1.bb
+@@ -10,7 +10,7 @@ AUTHOR = "Tyler Weaver <tyler@picknik.ai>"
+ ROS_AUTHOR = "Ioan Sucan <isucan@google.com>"
+ HOMEPAGE = "http://ros.org/wiki/geometric_shapes"
+ SECTION = "devel"
+-LICENSE = "BSD"
++LICENSE = "BSD-3-Clause"
+ LIC_FILES_CHKSUM = "file://package.xml;beginline=13;endline=13;md5=d566ef916e9dedc494f5f793a6690ba5"
+ 
+ ROS_CN = "geometric_shapes"
 diff --git a/meta-ros2-jazzy/generated-recipes/hls-lfcd-lds-driver/hls-lfcd-lds-driver_2.1.0-1.bb b/meta-ros2-jazzy/generated-recipes/hls-lfcd-lds-driver/hls-lfcd-lds-driver_2.1.0-1.bb
-index 73fb06c5b..8b651092d 100644
+index 73fb06c..8b65109 100644
 --- a/meta-ros2-jazzy/generated-recipes/hls-lfcd-lds-driver/hls-lfcd-lds-driver_2.1.0-1.bb
 +++ b/meta-ros2-jazzy/generated-recipes/hls-lfcd-lds-driver/hls-lfcd-lds-driver_2.1.0-1.bb
 @@ -10,7 +10,7 @@ AUTHOR = "Pyo <pyo@robotis.com>"
@@ -225,8 +409,47 @@ index 73fb06c5b..8b651092d 100644
  LIC_FILES_CHKSUM = "file://package.xml;beginline=11;endline=11;md5=d566ef916e9dedc494f5f793a6690ba5"
  
  ROS_CN = "hls_lfcd_lds_driver"
+diff --git a/meta-ros2-jazzy/generated-recipes/hpp-fcl/hpp-fcl_2.4.5-1.bb b/meta-ros2-jazzy/generated-recipes/hpp-fcl/hpp-fcl_2.4.5-1.bb
+index 45ac99f..c23fe21 100644
+--- a/meta-ros2-jazzy/generated-recipes/hpp-fcl/hpp-fcl_2.4.5-1.bb
++++ b/meta-ros2-jazzy/generated-recipes/hpp-fcl/hpp-fcl_2.4.5-1.bb
+@@ -9,7 +9,7 @@ DESCRIPTION = "An extension of the Flexible Collision Library."
+ AUTHOR = "Joseph Mirabel <jmirabel@laas.fr>"
+ HOMEPAGE = "https://github.com/humanoid-path-planner/hpp-fcl"
+ SECTION = "devel"
+-LICENSE = "BSD"
++LICENSE = "BSD-3-Clause"
+ LIC_FILES_CHKSUM = "file://package.xml;beginline=11;endline=11;md5=d566ef916e9dedc494f5f793a6690ba5"
+ 
+ ROS_CN = "hpp-fcl"
+diff --git a/meta-ros2-jazzy/generated-recipes/joint-state-publisher/joint-state-publisher_2.4.0-3.bb b/meta-ros2-jazzy/generated-recipes/joint-state-publisher/joint-state-publisher_2.4.0-3.bb
+index 59c76a2..f99855b 100644
+--- a/meta-ros2-jazzy/generated-recipes/joint-state-publisher/joint-state-publisher_2.4.0-3.bb
++++ b/meta-ros2-jazzy/generated-recipes/joint-state-publisher/joint-state-publisher_2.4.0-3.bb
+@@ -10,7 +10,7 @@ AUTHOR = "Chris Lalancette <clalancette@osrfoundation.org>"
+ ROS_AUTHOR = "David V. Lu!! <davidvlu@gmail.com>"
+ HOMEPAGE = "http://www.ros.org/wiki/joint_state_publisher"
+ SECTION = "devel"
+-LICENSE = "BSD"
++LICENSE = "BSD-3-Clause"
+ LIC_FILES_CHKSUM = "file://package.xml;beginline=12;endline=12;md5=d566ef916e9dedc494f5f793a6690ba5"
+ 
+ ROS_CN = "joint_state_publisher"
+diff --git a/meta-ros2-jazzy/generated-recipes/launch/launch-testing-ament-cmake_3.4.4-1.bb b/meta-ros2-jazzy/generated-recipes/launch/launch-testing-ament-cmake_3.4.4-1.bb
+index 21e7736..a9cf67e 100644
+--- a/meta-ros2-jazzy/generated-recipes/launch/launch-testing-ament-cmake_3.4.4-1.bb
++++ b/meta-ros2-jazzy/generated-recipes/launch/launch-testing-ament-cmake_3.4.4-1.bb
+@@ -12,7 +12,7 @@ HOMEPAGE = "https://wiki.ros.org"
+ SECTION = "devel"
+ # Original license in package.xml, joined with "&" when multiple license tags were used:
+ #         "Apache License 2.0 & BSD"
+-LICENSE = "Apache-2.0 & BSD"
++LICENSE = "Apache-2.0 & BSD-2-Clause"
+ LIC_FILES_CHKSUM = "file://package.xml;beginline=12;endline=12;md5=12c26a18c7f493fdc7e8a93b16b7c04f"
+ 
+ ROS_CN = "launch"
 diff --git a/meta-ros2-jazzy/generated-recipes/object-recognition-msgs/object-recognition-msgs_2.0.0-5.bb b/meta-ros2-jazzy/generated-recipes/object-recognition-msgs/object-recognition-msgs_2.0.0-5.bb
-index 17455271d..d23917357 100644
+index 1745527..d239173 100644
 --- a/meta-ros2-jazzy/generated-recipes/object-recognition-msgs/object-recognition-msgs_2.0.0-5.bb
 +++ b/meta-ros2-jazzy/generated-recipes/object-recognition-msgs/object-recognition-msgs_2.0.0-5.bb
 @@ -10,7 +10,7 @@ AUTHOR = "Vincent Rabaud <vincent.rabaud@gmail.com>"
@@ -238,13 +461,13 @@ index 17455271d..d23917357 100644
  LIC_FILES_CHKSUM = "file://package.xml;beginline=7;endline=7;md5=d566ef916e9dedc494f5f793a6690ba5"
  
  ROS_CN = "object_recognition_msgs"
-diff --git a/meta-ros2-jazzy/generated-recipes/pinocchio/pinocchio_3.4.0-2.bb b/meta-ros2-jazzy/generated-recipes/pinocchio/pinocchio_3.5.0-1.bb
+diff --git a/meta-ros2-jazzy/generated-recipes/pinocchio/pinocchio_3.4.0-2.bb b/meta-ros2-jazzy/generated-recipes/pinocchio/pinocchio_3.6.0-1.bb
 similarity index 90%
 rename from meta-ros2-jazzy/generated-recipes/pinocchio/pinocchio_3.4.0-2.bb
-rename to meta-ros2-jazzy/generated-recipes/pinocchio/pinocchio_3.5.0-1.bb
-index 5b2458e6c..275977c9f 100644
+rename to meta-ros2-jazzy/generated-recipes/pinocchio/pinocchio_3.6.0-1.bb
+index 5b2458e..7e12431 100644
 --- a/meta-ros2-jazzy/generated-recipes/pinocchio/pinocchio_3.4.0-2.bb
-+++ b/meta-ros2-jazzy/generated-recipes/pinocchio/pinocchio_3.5.0-1.bb
++++ b/meta-ros2-jazzy/generated-recipes/pinocchio/pinocchio_3.6.0-1.bb
 @@ -9,8 +9,8 @@ DESCRIPTION = "A fast and flexible implementation of Rigid Body Dynamics algorit
  AUTHOR = "Justin Carpentier <justin.carpentier@inria.fr>"
  HOMEPAGE = "https://github.com/stack-of-tasks/pinocchio"
@@ -261,16 +484,16 @@ index 5b2458e6c..275977c9f 100644
  RDEPENDS:${PN} += "${ROS_EXEC_DEPENDS}"
  
 -# matches with: https://github.com/ros2-gbp/pinocchio-release/archive/release/jazzy/pinocchio/3.4.0-2.tar.gz
-+# matches with: https://github.com/ros2-gbp/pinocchio-release/archive/release/jazzy/pinocchio/3.5.0-1.tar.gz
++# matches with: https://github.com/ros2-gbp/pinocchio-release/archive/release/jazzy/pinocchio/3.6.0-1.tar.gz
  ROS_BRANCH ?= "branch=release/jazzy/pinocchio"
  SRC_URI = "git://github.com/ros2-gbp/pinocchio-release;${ROS_BRANCH};protocol=https"
 -SRCREV = "1e9be14ab09e28ee5868bcdcd5ed3c73881de9a0"
-+SRCREV = "34a6436152dc1b8b4b358504c18b084b0b109b04"
++SRCREV = "38cb5592495c829a7e41c9b796ff9e617c797b27"
  S = "${WORKDIR}/git"
  
  ROS_BUILD_TYPE = "cmake"
 diff --git a/meta-ros2-jazzy/generated-recipes/random-numbers/random-numbers_2.0.1-5.bb b/meta-ros2-jazzy/generated-recipes/random-numbers/random-numbers_2.0.1-5.bb
-index 8af3efd2b..1133d75a1 100644
+index 8af3efd..1133d75 100644
 --- a/meta-ros2-jazzy/generated-recipes/random-numbers/random-numbers_2.0.1-5.bb
 +++ b/meta-ros2-jazzy/generated-recipes/random-numbers/random-numbers_2.0.1-5.bb
 @@ -10,7 +10,7 @@ AUTHOR = "Anas M'chichou <anasarrak@erlerobotics.com>"
@@ -283,7 +506,7 @@ index 8af3efd2b..1133d75a1 100644
  
  ROS_CN = "random_numbers"
 diff --git a/meta-ros2-jazzy/generated-recipes/ros2-control/controller-manager_4.28.1-1.bb b/meta-ros2-jazzy/generated-recipes/ros2-control/controller-manager_4.28.1-1.bb
-index 7c4df4ec3..9992b4a69 100644
+index 7c4df4e..9992b4a 100644
 --- a/meta-ros2-jazzy/generated-recipes/ros2-control/controller-manager_4.28.1-1.bb
 +++ b/meta-ros2-jazzy/generated-recipes/ros2-control/controller-manager_4.28.1-1.bb
 @@ -42,6 +42,7 @@ ROS_BUILDTOOL_DEPENDS = " \
@@ -294,8 +517,21 @@ index 7c4df4ec3..9992b4a69 100644
  "
  
  ROS_EXPORT_DEPENDS = " \
+diff --git a/meta-ros2-jazzy/generated-recipes/rosx-introspection/rosx-introspection_1.0.2-1.bb b/meta-ros2-jazzy/generated-recipes/rosx-introspection/rosx-introspection_1.0.2-1.bb
+index 17bab3b..11f519a 100644
+--- a/meta-ros2-jazzy/generated-recipes/rosx-introspection/rosx-introspection_1.0.2-1.bb
++++ b/meta-ros2-jazzy/generated-recipes/rosx-introspection/rosx-introspection_1.0.2-1.bb
+@@ -65,6 +65,8 @@ SRC_URI = "git://github.com/ros2-gbp/rosx_introspection-release;${ROS_BRANCH};pr
+ SRCREV = "02a0c9e70eb60d10f9590739864b061f6d6ad667"
+ S = "${WORKDIR}/git"
+ 
++do_configure[network] = "1"
++
+ ROS_BUILD_TYPE = "ament_cmake"
+ 
+ inherit ros_${ROS_BUILD_TYPE}
 diff --git a/meta-ros2-jazzy/generated-recipes/rsl/rsl_1.1.0-3.bb b/meta-ros2-jazzy/generated-recipes/rsl/rsl_1.1.0-3.bb
-index f763b02eb..36c3598db 100644
+index f763b02..36c3598 100644
 --- a/meta-ros2-jazzy/generated-recipes/rsl/rsl_1.1.0-3.bb
 +++ b/meta-ros2-jazzy/generated-recipes/rsl/rsl_1.1.0-3.bb
 @@ -26,6 +26,7 @@ ROS_BUILD_DEPENDS = " \
@@ -329,7 +565,7 @@ index f763b02eb..36c3598db 100644
  RDEPENDS:${PN} += "${ROS_EXEC_DEPENDS}"
  
 diff --git a/meta-ros2-jazzy/generated-recipes/srdfdom/srdfdom_2.0.7-1.bb b/meta-ros2-jazzy/generated-recipes/srdfdom/srdfdom_2.0.7-1.bb
-index f9516b3df..8ad046058 100644
+index f9516b3..8ad0460 100644
 --- a/meta-ros2-jazzy/generated-recipes/srdfdom/srdfdom_2.0.7-1.bb
 +++ b/meta-ros2-jazzy/generated-recipes/srdfdom/srdfdom_2.0.7-1.bb
 @@ -10,7 +10,7 @@ AUTHOR = "MoveIt Release Team <moveit_releasers@googlegroups.com>"
@@ -342,7 +578,7 @@ index f9516b3df..8ad046058 100644
  
  ROS_CN = "srdfdom"
 diff --git a/meta-ros2-jazzy/generated-recipes/tf-transformations/tf-transformations_1.1.0-1.bb b/meta-ros2-jazzy/generated-recipes/tf-transformations/tf-transformations_1.1.0-1.bb
-index 1a31fd3e0..7b5b2578b 100644
+index 1a31fd3..7b5b257 100644
 --- a/meta-ros2-jazzy/generated-recipes/tf-transformations/tf-transformations_1.1.0-1.bb
 +++ b/meta-ros2-jazzy/generated-recipes/tf-transformations/tf-transformations_1.1.0-1.bb
 @@ -9,7 +9,7 @@ DESCRIPTION = "Reimplementation of the tf/transformations.py library for common
@@ -355,7 +591,7 @@ index 1a31fd3e0..7b5b2578b 100644
  
  ROS_CN = "tf_transformations"
 diff --git a/meta-ros2-jazzy/generated-recipes/urdf-parser-py/urdfdom-py_1.2.1-3.bb b/meta-ros2-jazzy/generated-recipes/urdf-parser-py/urdfdom-py_1.2.1-3.bb
-index 48a1d0c9d..c6cf45025 100644
+index 48a1d0c..c6cf450 100644
 --- a/meta-ros2-jazzy/generated-recipes/urdf-parser-py/urdfdom-py_1.2.1-3.bb
 +++ b/meta-ros2-jazzy/generated-recipes/urdf-parser-py/urdfdom-py_1.2.1-3.bb
 @@ -10,7 +10,7 @@ AUTHOR = "Chris Lalancette <clalancette@openrobotics.org>"
@@ -369,7 +605,7 @@ index 48a1d0c9d..c6cf45025 100644
  ROS_CN = "urdf_parser_py"
 diff --git a/meta-ros2-jazzy/recipes-bbappends/control-toolbox/control-toolbox/do-not-set-compiler-options.patch b/meta-ros2-jazzy/recipes-bbappends/control-toolbox/control-toolbox/do-not-set-compiler-options.patch
 new file mode 100644
-index 000000000..44ad0f674
+index 0000000..cca7262
 --- /dev/null
 +++ b/meta-ros2-jazzy/recipes-bbappends/control-toolbox/control-toolbox/do-not-set-compiler-options.patch
 @@ -0,0 +1,14 @@
@@ -389,7 +625,7 @@ index 000000000..44ad0f674
 +   add_compile_definitions(
 diff --git a/meta-ros2-jazzy/recipes-bbappends/control-toolbox/control-toolbox_4.2.0-1.bbappend b/meta-ros2-jazzy/recipes-bbappends/control-toolbox/control-toolbox_4.2.0-1.bbappend
 new file mode 100644
-index 000000000..762b50d98
+index 0000000..762b50d
 --- /dev/null
 +++ b/meta-ros2-jazzy/recipes-bbappends/control-toolbox/control-toolbox_4.2.0-1.bbappend
 @@ -0,0 +1,2 @@
@@ -398,7 +634,7 @@ index 000000000..762b50d98
 \ No newline at end of file
 diff --git a/meta-ros2-jazzy/recipes-bbappends/eigenpy/eigenpy/0001-disable-unittests.patch b/meta-ros2-jazzy/recipes-bbappends/eigenpy/eigenpy/0001-disable-unittests.patch
 new file mode 100644
-index 000000000..2c9b2a7d6
+index 0000000..5847a13
 --- /dev/null
 +++ b/meta-ros2-jazzy/recipes-bbappends/eigenpy/eigenpy/0001-disable-unittests.patch
 @@ -0,0 +1,13 @@
@@ -416,7 +652,7 @@ index 000000000..2c9b2a7d6
 + pkg_config_append_libs(${PROJECT_NAME})
 + pkg_config_append_cflags("-I${PYTHON_INCLUDE_DIRS}")
 diff --git a/meta-ros2-jazzy/recipes-bbappends/eigenpy/eigenpy_3.10.3-1.bbappend b/meta-ros2-jazzy/recipes-bbappends/eigenpy/eigenpy_3.10.3-1.bbappend
-index 791d4e688..7452c10f0 100644
+index 791d4e6..7452c10 100644
 --- a/meta-ros2-jazzy/recipes-bbappends/eigenpy/eigenpy_3.10.3-1.bbappend
 +++ b/meta-ros2-jazzy/recipes-bbappends/eigenpy/eigenpy_3.10.3-1.bbappend
 @@ -2,6 +2,9 @@
@@ -435,8 +671,60 @@ index 791d4e688..7452c10f0 100644
  "
 +INSANE_SKIP:${PN}-dev += "buildpaths"
 \ No newline at end of file
+diff --git a/meta-ros2-jazzy/recipes-bbappends/foxglove-bridge/foxglove-bridge_0.8.3-1.bbappend b/meta-ros2-jazzy/recipes-bbappends/foxglove-bridge/foxglove-bridge_0.8.5-1.bbappend
+similarity index 86%
+rename from meta-ros2-jazzy/recipes-bbappends/foxglove-bridge/foxglove-bridge_0.8.3-1.bbappend
+rename to meta-ros2-jazzy/recipes-bbappends/foxglove-bridge/foxglove-bridge_0.8.5-1.bbappend
+index 7f20218..3b07eaa 100644
+--- a/meta-ros2-jazzy/recipes-bbappends/foxglove-bridge/foxglove-bridge_0.8.3-1.bbappend
++++ b/meta-ros2-jazzy/recipes-bbappends/foxglove-bridge/foxglove-bridge_0.8.5-1.bbappend
+@@ -8,3 +8,7 @@ CXXFLAGS += "-Wno-error=deprecated-declarations"
+ 
+ # foxglove-bridge/0.7.3-1-r0/recipe-sysroot/usr/include/libstatistics_collector/libstatistics_collector/topic_statistics_collector/received_message_period.hpp:174:32: error: unused parameter 'message_info' [-Werror=unused-parameter]
+ CXXFLAGS += "-Wno-error=unused-parameter"
++
++# Disable 'old-style-cast' warning-as-error
++CFLAGS += "-Wno-error=sign-conversion -Wno-error=old-style-cast"
++CXXFLAGS += "-Wno-error=sign-conversion -Wno-error=old-style-cast"
+\ No newline at end of file
+diff --git a/meta-ros2-jazzy/recipes-bbappends/geometric-shapes/geometric-shapes/update-octomap-version.patch b/meta-ros2-jazzy/recipes-bbappends/geometric-shapes/geometric-shapes/update-octomap-version.patch
+new file mode 100644
+index 0000000..1115562
+--- /dev/null
++++ b/meta-ros2-jazzy/recipes-bbappends/geometric-shapes/geometric-shapes/update-octomap-version.patch
+@@ -0,0 +1,14 @@
++Upstream-Status: Pending
++diff --git a/CMakeLists.txt b/CMakeLists.txt
++index 8c46189..35c2a4b 100644
++--- a/CMakeLists.txt
+++++ b/CMakeLists.txt
++@@ -45,7 +45,7 @@ find_package(eigen_stl_containers REQUIRED)
++ find_package(geometry_msgs REQUIRED)
++ # Enforce the system package version on Ubuntu jammy and noble which is also used by libfcl-dev
++ # The version is fixed to prevent ABI conflicts with ros-octomap
++-find_package(octomap 1.9.7...<1.10.0 REQUIRED)
+++find_package(octomap 1.9.7...<1.11.0 REQUIRED)
++ find_package(QHULL REQUIRED)
++ find_package(random_numbers REQUIRED)
++ find_package(rclcpp REQUIRED)
+diff --git a/meta-ros2-jazzy/recipes-bbappends/geometric-shapes/geometric-shapes_2.3.2-1.bbappend b/meta-ros2-jazzy/recipes-bbappends/geometric-shapes/geometric-shapes_2.3.2-1.bbappend
+index 41236f3..4a9d514 100644
+--- a/meta-ros2-jazzy/recipes-bbappends/geometric-shapes/geometric-shapes_2.3.2-1.bbappend
++++ b/meta-ros2-jazzy/recipes-bbappends/geometric-shapes/geometric-shapes_2.3.2-1.bbappend
+@@ -3,3 +3,10 @@
+ # ERROR: geometric-shapes-2.0.0-1-r0 do_package_qa: QA Issue:
+ # non -dev/-dbg/nativesdk- package contains symlink .so: geometric-shapes path '/work/raspberrypi4-webos-linux-gnueabi/geometric-shapes/2.0.0-1-r0/packages-split/geometric-shapes/usr/lib/libgeometric_shapes.so' [dev-so]
+ inherit ros_insane_dev_so
++
++FILESEXTRAPATHS:prepend := "${THISDIR}/${BPN}:"
++SRC_URI += "file://update-octomap-version.patch"
++
++do_install:append() {
++    sed -i -e "s#${RECIPE_SYSROOT}#\${_IMPORT_PREFIX}#g" ${D}${ros_datadir}/geometric_shapes/cmake/export_geometric_shapesExport.cmake
++}
+\ No newline at end of file
 diff --git a/meta-ros2-jazzy/recipes-bbappends/gz-cmake-vendor/gz-cmake-vendor_0.0.9-1.bbappend b/meta-ros2-jazzy/recipes-bbappends/gz-cmake-vendor/gz-cmake-vendor_0.0.9-1.bbappend
-index 280aab81c..e22730684 100644
+index 280aab8..e227306 100644
 --- a/meta-ros2-jazzy/recipes-bbappends/gz-cmake-vendor/gz-cmake-vendor_0.0.9-1.bbappend
 +++ b/meta-ros2-jazzy/recipes-bbappends/gz-cmake-vendor/gz-cmake-vendor_0.0.9-1.bbappend
 @@ -1,6 +1,9 @@
@@ -451,7 +739,7 @@ index 280aab81c..e22730684 100644
  # See CMakeLists.txt for details on why /usr/opt/gz_cmake_vendor/ is used
  FILES:${PN} += "${datadir}/gz/gz-cmake4/* \
 diff --git a/meta-ros2-jazzy/recipes-bbappends/hpp-fcl/hpp-fcl_2.4.5-1.bbappend b/meta-ros2-jazzy/recipes-bbappends/hpp-fcl/hpp-fcl_2.4.5-1.bbappend
-index 230c555c5..72e79b710 100644
+index 230c555..72e79b7 100644
 --- a/meta-ros2-jazzy/recipes-bbappends/hpp-fcl/hpp-fcl_2.4.5-1.bbappend
 +++ b/meta-ros2-jazzy/recipes-bbappends/hpp-fcl/hpp-fcl_2.4.5-1.bbappend
 @@ -5,10 +5,6 @@ ROS_BUILD_DEPENDS += "python3-numpy-native"
@@ -467,7 +755,7 @@ index 230c555c5..72e79b710 100644
  #   /usr/share/ament_index
 diff --git a/meta-ros2-jazzy/recipes-bbappends/joint-trajectory-controller/joint-trajectory-controller/do-not-set-compiler-options.patch b/meta-ros2-jazzy/recipes-bbappends/joint-trajectory-controller/joint-trajectory-controller/do-not-set-compiler-options.patch
 new file mode 100644
-index 000000000..973c5b494
+index 0000000..4a94319
 --- /dev/null
 +++ b/meta-ros2-jazzy/recipes-bbappends/joint-trajectory-controller/joint-trajectory-controller/do-not-set-compiler-options.patch
 @@ -0,0 +1,14 @@
@@ -487,7 +775,7 @@ index 000000000..973c5b494
 + set(THIS_PACKAGE_INCLUDE_DEPENDS
 diff --git a/meta-ros2-jazzy/recipes-bbappends/joint-trajectory-controller/joint-trajectory-controller_4.23.0-1.bbappend b/meta-ros2-jazzy/recipes-bbappends/joint-trajectory-controller/joint-trajectory-controller_4.23.0-1.bbappend
 new file mode 100644
-index 000000000..762b50d98
+index 0000000..762b50d
 --- /dev/null
 +++ b/meta-ros2-jazzy/recipes-bbappends/joint-trajectory-controller/joint-trajectory-controller_4.23.0-1.bbappend
 @@ -0,0 +1,2 @@
@@ -495,7 +783,7 @@ index 000000000..762b50d98
 +SRC_URI += "file://do-not-set-compiler-options.patch"
 \ No newline at end of file
 diff --git a/meta-ros2-jazzy/recipes-bbappends/pinocchio/pinocchio_%.bbappend b/meta-ros2-jazzy/recipes-bbappends/pinocchio/pinocchio_%.bbappend
-index 1a12b6c88..fa05a1b14 100644
+index 1a12b6c..fa05a1b 100644
 --- a/meta-ros2-jazzy/recipes-bbappends/pinocchio/pinocchio_%.bbappend
 +++ b/meta-ros2-jazzy/recipes-bbappends/pinocchio/pinocchio_%.bbappend
 @@ -21,6 +21,12 @@ FILES:${PN} += "${datadir}/ament_index/resource_index/packages/pinocchio"
@@ -516,7 +804,7 @@ index 1a12b6c88..fa05a1b14 100644
 \ No newline at end of file
 diff --git a/meta-ros2-jazzy/recipes-bbappends/ros2-control/controller-interface/do-not-set-compiler-options.patch b/meta-ros2-jazzy/recipes-bbappends/ros2-control/controller-interface/do-not-set-compiler-options.patch
 new file mode 100644
-index 000000000..8e5143328
+index 0000000..2e91679
 --- /dev/null
 +++ b/meta-ros2-jazzy/recipes-bbappends/ros2-control/controller-interface/do-not-set-compiler-options.patch
 @@ -0,0 +1,20 @@
@@ -541,7 +829,7 @@ index 000000000..8e5143328
 +
 + set(THIS_PACKAGE_INCLUDE_DEPENDS
 diff --git a/meta-ros2-jazzy/recipes-bbappends/ros2-control/controller-interface_4.28.1-1.bbappend b/meta-ros2-jazzy/recipes-bbappends/ros2-control/controller-interface_4.28.1-1.bbappend
-index b122d7e34..0b03eb1bb 100644
+index b122d7e..0b03eb1 100644
 --- a/meta-ros2-jazzy/recipes-bbappends/ros2-control/controller-interface_4.28.1-1.bbappend
 +++ b/meta-ros2-jazzy/recipes-bbappends/ros2-control/controller-interface_4.28.1-1.bbappend
 @@ -1,4 +1,6 @@
@@ -552,7 +840,7 @@ index b122d7e34..0b03eb1bb 100644
  ROS_BUILDTOOL_DEPENDS = " \
      ament-cmake-ros-native \
 diff --git a/meta-ros2-jazzy/recipes-bbappends/ros2-control/controller-manager/0001-setuptools-fix-executable.patch b/meta-ros2-jazzy/recipes-bbappends/ros2-control/controller-manager/0001-setuptools-fix-executable.patch
-index 833b7834e..2773ec5e6 100644
+index 833b783..2773ec5 100644
 --- a/meta-ros2-jazzy/recipes-bbappends/ros2-control/controller-manager/0001-setuptools-fix-executable.patch
 +++ b/meta-ros2-jazzy/recipes-bbappends/ros2-control/controller-manager/0001-setuptools-fix-executable.patch
 @@ -1,10 +1,11 @@
@@ -570,7 +858,7 @@ index 833b7834e..2773ec5e6 100644
       spawner = controller_manager.spawner:main
 diff --git a/meta-ros2-jazzy/recipes-bbappends/ros2-control/controller-manager/do-not-set-compiler-options.patch b/meta-ros2-jazzy/recipes-bbappends/ros2-control/controller-manager/do-not-set-compiler-options.patch
 new file mode 100644
-index 000000000..8e5143328
+index 0000000..2e91679
 --- /dev/null
 +++ b/meta-ros2-jazzy/recipes-bbappends/ros2-control/controller-manager/do-not-set-compiler-options.patch
 @@ -0,0 +1,20 @@
@@ -595,7 +883,7 @@ index 000000000..8e5143328
 +
 + set(THIS_PACKAGE_INCLUDE_DEPENDS
 diff --git a/meta-ros2-jazzy/recipes-bbappends/ros2-control/controller-manager_4.28.1-1.bbappend b/meta-ros2-jazzy/recipes-bbappends/ros2-control/controller-manager_4.28.1-1.bbappend
-index 25b5e4b69..fcf050bba 100644
+index 25b5e4b..fcf050b 100644
 --- a/meta-ros2-jazzy/recipes-bbappends/ros2-control/controller-manager_4.28.1-1.bbappend
 +++ b/meta-ros2-jazzy/recipes-bbappends/ros2-control/controller-manager_4.28.1-1.bbappend
 @@ -15,4 +15,6 @@ ROS_BUILDTOOL_DEPENDS += " \
@@ -608,7 +896,7 @@ index 25b5e4b69..fcf050bba 100644
 +            "
 diff --git a/meta-ros2-jazzy/recipes-bbappends/ros2-control/hardware-interface/do-not-set-compiler-options.patch b/meta-ros2-jazzy/recipes-bbappends/ros2-control/hardware-interface/do-not-set-compiler-options.patch
 new file mode 100644
-index 000000000..e951dc19c
+index 0000000..578765d
 --- /dev/null
 +++ b/meta-ros2-jazzy/recipes-bbappends/ros2-control/hardware-interface/do-not-set-compiler-options.patch
 @@ -0,0 +1,20 @@
@@ -633,7 +921,7 @@ index 000000000..e951dc19c
 +
 + set(THIS_PACKAGE_INCLUDE_DEPENDS
 diff --git a/meta-ros2-jazzy/recipes-bbappends/ros2-control/hardware-interface_4.28.1-1.bbappend b/meta-ros2-jazzy/recipes-bbappends/ros2-control/hardware-interface_4.28.1-1.bbappend
-index b122d7e34..6f34e66b4 100644
+index b122d7e..6f34e66 100644
 --- a/meta-ros2-jazzy/recipes-bbappends/ros2-control/hardware-interface_4.28.1-1.bbappend
 +++ b/meta-ros2-jazzy/recipes-bbappends/ros2-control/hardware-interface_4.28.1-1.bbappend
 @@ -1,6 +1,11 @@
@@ -648,8 +936,84 @@ index b122d7e34..6f34e66b4 100644
 +do_install:append() {
 +    sed -i -e "s#${RECIPE_SYSROOT}/opt/ros/jazzy#\${_IMPORT_PREFIX}#g" ${D}${ros_datadir}/hardware_interface/cmake/export_hardware_interfaceExport.cmake
 +}
+diff --git a/meta-ros2-jazzy/recipes-bbappends/ros2-control/joint-limits/do-not-set-compiler-options.patch b/meta-ros2-jazzy/recipes-bbappends/ros2-control/joint-limits/do-not-set-compiler-options.patch
+new file mode 100644
+index 0000000..9449ce1
+--- /dev/null
++++ b/meta-ros2-jazzy/recipes-bbappends/ros2-control/joint-limits/do-not-set-compiler-options.patch
+@@ -0,0 +1,21 @@
++Do not set compiler options
++
++Upstream-Status: Pending
++
++Signed-off-by: Stephen Street <stephen@redrocketcomputing.com>
++Signed-off-by: Rob Woolley <rob.woolley@windriver.com>
++
++diff --git a/CMakeLists.txt b/CMakeLists.txt
++index 762d9a0ee..3660c6910 100644
++--- a/CMakeLists.txt
+++++ b/CMakeLists.txt
++@@ -3,6 +3,8 @@ project(joint_limits LANGUAGES CXX)
++ 
++ find_package(ros2_control_cmake REQUIRED)
++ set_compiler_options()
+++# Override Werror=shadow -Wno-error=missing-braces
+++add_compile_options(-Wno-error=shadow -Wno-error=missing-braces)
++ export_windows_symbols()
++ 
++ set(THIS_PACKAGE_INCLUDE_DEPENDS
++  
+\ No newline at end of file
+diff --git a/meta-ros2-jazzy/recipes-bbappends/ros2-control/joint-limits_4.28.1-1.bbappend b/meta-ros2-jazzy/recipes-bbappends/ros2-control/joint-limits_4.28.1-1.bbappend
+new file mode 100644
+index 0000000..eb1961d
+--- /dev/null
++++ b/meta-ros2-jazzy/recipes-bbappends/ros2-control/joint-limits_4.28.1-1.bbappend
+@@ -0,0 +1,4 @@
++FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
++
++SRC_URI += "file://do-not-set-compiler-options.patch"
++
+diff --git a/meta-ros2-jazzy/recipes-bbappends/ros2-control/transmission-interface/do-not-set-compiler-options.patch b/meta-ros2-jazzy/recipes-bbappends/ros2-control/transmission-interface/do-not-set-compiler-options.patch
+new file mode 100644
+index 0000000..76a5282
+--- /dev/null
++++ b/meta-ros2-jazzy/recipes-bbappends/ros2-control/transmission-interface/do-not-set-compiler-options.patch
+@@ -0,0 +1,21 @@
++Do not set compiler options
++
++Upstream-Status: Pending
++
++Signed-off-by: Stephen Street <stephen@redrocketcomputing.com>
++Signed-off-by: Rob Woolley <rob.woolley@windriver.com>
++
++diff --git a/CMakeLists.txt b/CMakeLists.txt
++index 3cd2e80dd..af06eb1ff 100644
++--- a/CMakeLists.txt
+++++ b/CMakeLists.txt
++@@ -3,6 +3,8 @@ project(transmission_interface LANGUAGES CXX)
++ 
++ find_package(ros2_control_cmake REQUIRED)
++ set_compiler_options()
+++# Override Werror=shadow -Wno-error=missing-braces
+++add_compile_options(-Wno-error=shadow -Wno-error=missing-braces)
++ export_windows_symbols()
++ 
++ set(THIS_PACKAGE_INCLUDE_DEPENDS
++  
+\ No newline at end of file
+diff --git a/meta-ros2-jazzy/recipes-bbappends/ros2-control/transmission-interface_4.28.1-1.bbappend b/meta-ros2-jazzy/recipes-bbappends/ros2-control/transmission-interface_4.28.1-1.bbappend
+new file mode 100644
+index 0000000..eb1961d
+--- /dev/null
++++ b/meta-ros2-jazzy/recipes-bbappends/ros2-control/transmission-interface_4.28.1-1.bbappend
+@@ -0,0 +1,4 @@
++FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
++
++SRC_URI += "file://do-not-set-compiler-options.patch"
++
 diff --git a/meta-ros2-jazzy/recipes-bbappends/topic-tools/topic-tools/0001-setuptools-fix-executable.patch b/meta-ros2-jazzy/recipes-bbappends/topic-tools/topic-tools/0001-setuptools-fix-executable.patch
-index 876bc9573..63a363e99 100644
+index 876bc95..63a363e 100644
 --- a/meta-ros2-jazzy/recipes-bbappends/topic-tools/topic-tools/0001-setuptools-fix-executable.patch
 +++ b/meta-ros2-jazzy/recipes-bbappends/topic-tools/topic-tools/0001-setuptools-fix-executable.patch
 @@ -1,12 +1,13 @@
@@ -669,3 +1033,40 @@ index 876bc9573..63a363e99 100644
 - install-scripts=$base/lib/topic_tools
 + install_scripts=$base/lib/topic_tools
   [options.entry_points]
+diff --git a/meta-ros2-jazzy/recipes-bbappends/v4l2-camera/v4l2-camera/fix_warning.patch b/meta-ros2-jazzy/recipes-bbappends/v4l2-camera/v4l2-camera/fix_warning.patch
+deleted file mode 100644
+index f631d55..0000000
+--- a/meta-ros2-jazzy/recipes-bbappends/v4l2-camera/v4l2-camera/fix_warning.patch
++++ /dev/null
+@@ -1,18 +0,0 @@
+-In file included from /ala-lpggp31/rwoolley/updaterolling/tmp-glibc/work/core2-64-oe-linux/v4l2-camera/0.7.0-1-r0/git/src/v4l2_camera.cpp:17:
+-/ala-lpggp31/rwoolley/updaterolling/tmp-glibc/work/core2-64-oe-linux/v4l2-camera/0.7.0-1-r0/recipe-sysroot/usr/include/cv_bridge/cv_bridge/cv_bridge.h:42:2: error: #warning is a GCC extension [-Werror]
+-   42 | #warning This header is obsolete, please include cv_bridge/cv_bridge.hpp instead
+-      |  ^~~~~~~
+-
+-Index: git/src/v4l2_camera.cpp
+-===================================================================
+---- git.orig/src/v4l2_camera.cpp
+-+++ git/src/v4l2_camera.cpp
+-@@ -14,7 +14,7 @@
+- 
+- #include "v4l2_camera/v4l2_camera.hpp"
+- 
+--#include <cv_bridge/cv_bridge.h>
+-+#include <cv_bridge/cv_bridge.hpp>
+- 
+- #include <algorithm>
+- #include <memory>
+diff --git a/meta-ros2-jazzy/recipes-bbappends/v4l2-camera/v4l2-camera_%.bbappend b/meta-ros2-jazzy/recipes-bbappends/v4l2-camera/v4l2-camera_%.bbappend
+index 6450681..f3854bd 100644
+--- a/meta-ros2-jazzy/recipes-bbappends/v4l2-camera/v4l2-camera_%.bbappend
++++ b/meta-ros2-jazzy/recipes-bbappends/v4l2-camera/v4l2-camera_%.bbappend
+@@ -1,8 +1,5 @@
+ # Copyright (C) 2023 Avnet, Inc.  All rights reserved.
+ 
+-FILESEXTRAPATHS:prepend := "${THISDIR}/${BPN}:"
+-SRC_URI += "file://fix_warning.patch"
+-
+ # | CMake Error in CMakeLists.txt:
+ # |   Imported target "rclcpp::rclcpp" includes non-existent path
+ # |
