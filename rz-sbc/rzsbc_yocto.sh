@@ -715,10 +715,32 @@ build_sdk() {
 	fi
 
 	#Initiate build sdk
-	MACHINE=${TARGET_MACHINE} bitbake ${IMAGE} -c populate_sdk_ext
+	MACHINE=${TARGET_MACHINE} bitbake ${IMAGE} -c populate_sdk
 
 	echo
 	echo "Finished the rz yocto sdk build for RZ SBC board. Target image: ${IMAGE}"
+	echo "========================================================================"
+
+	deploy_build_assets
+	#output
+}
+
+# Main build-esdk
+build_esdk() {
+	setup $1
+
+	setup_conf
+
+	# if targe directory is not present, we have to build common before building sdk.
+	if [ ! -d "${RZ_TARGET_DIR}/build/tmp/deploy/images" ];then
+		echo "This SDK build will start from scratch."
+	fi
+
+	#Initiate build sdk
+	MACHINE=${TARGET_MACHINE} bitbake ${IMAGE} -c populate_sdk_ext
+
+	echo
+	echo "Finished the rz yocto eSDK build for RZ SBC board. Target image: ${IMAGE}"
 	echo "========================================================================"
 
 	deploy_build_assets
@@ -797,6 +819,8 @@ else
 		build $2
 	elif [ $1 = "build-sdk" ]; then
 		build_sdk $2
+	elif [ $1 == "build-esdk" ]; then
+		build_esdk $2
 	else
 		guideline
 	fi
